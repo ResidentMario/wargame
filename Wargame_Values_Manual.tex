@@ -1,0 +1,1287 @@
+\documentclass{article}
+%\usepackage{fullpage}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{Wargame: Red Dragon Mechanics Manual}
+\date{\today}
+\author{Resident Mario}
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Movement}
+\subsection{Speed}
+
+A unit's speed is its off-road speed: the speed at which the unit moves whenever
+it is ordered to move, but not to move fast. For units that can't use roads,
+and therefore can't move fast---infantry, planes, helicopters, and naval
+units---this is the only speed at which they can move.
+
+Speed is lowest for infantry units---obviously, as they move on foot. Infantry
+can only manage between 15 and 30 kph.
+
+Vehicular units can be broadly divided into two types by their system of
+locomotion: tracked vehicles and wheeled ones. Wheeled vehicles tend to be much
+faster, but also much lighter overall. Tracked vehicles can do anywhere between
+35 and 80 kph (with the exception of the M-18, which manages 100 kph); wheeled
+ones, between 50 and 110 kph.
+
+Helicopters move at speeds of between 180 and 350 kph. Since they have to
+accelerate at takeoff and decelerate on arrival, it takes them a few seconds to
+reach top speed or to stop.
+
+Airplanes move at constant speeds of between 500 and 1100 kph.
+
+Naval units move at speeds measured in knots---each kt is equal to approximately
+1.85 kph. They move at speeds of 14 to 32 kt, or about 26 to 59 kph. Like
+helicopters they take a little bit of time to accelerate or to stop, though
+significantly less. Quite unrealistically, they are also all capable of
+turning in place.
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Speed (KPH) & Infantry Units \\ \hline
+    15 & ATGM teams, MANPADS teams, some Specialist Infantry.  \\ 
+    20 & Line infantry squads. \\ 
+    25 & Fast/Shock infantry squads. \\ 
+    30 & Very fast/Commando infantry squads. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Speed (KPH) & Vehicular Units \\ \hline
+    35 & I-Hawk pattern tracked anti-air units. \\ 
+    40--45 & Especially slow tracked units, such as the T-62M. \\
+    50 & Transport trucks.  \\ 
+    50--80 & Most tanks. \\
+    100 & South Korean M-18, fastest tracked unit.\\
+    80--100 & Fast wheeled units. \\ 
+    110 & The fastest ground unit, the P4 Milan 2 ATGM jeep. \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Speed (KPH) & Helicopter Units \\ \hline
+    180 & Mi-4s. \\ 
+    200 & Mi-2s. \\ 
+    205--240 & Bell UH-1 Hueys and other light NATO transports. \\
+    250 & Mi-8s, SA 330 Pumas. \\ 
+    280--310 & NATO fast and heavy transports, and gunships. \\
+    330 & Mi-24s. \\ 
+    350 & AH-1W SuperCobra. \\ \hline
+
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Speed (KPH) & Planes \\ \hline
+    500 & A-10 Thunderbolt II.\\
+    600 & Slow planes---mostly cheap bombers. \\ 
+    750 & Mid-to-low tier bombers and ground-attack aircraft. \\
+    900 & MiG-29s, MiG-23s, F-4 Phantoms, and others. \\
+    1000 & Default. The most common value. \\
+    1100 & MiG-31 and MiG-31M Foxbat interceptors. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Road Speed}
+
+Wheeled and tracked vehicular units, touched upon earlier, are distinguished in
+large part by their differing road speeds---the speeds they achieve when fast moving
+down a road. Tracked units all have a road speed of 110 kph, regardless of their
+off-road speed; similarly, wheeled units all have a road speed of 150 kph,
+regardless of their off-road capacity.
+
+No other units are capable of fast-moving down roads, and so no other units have
+road speeds.
+
+% \begin{center}
+%     \begin{tabular}{ | l | p{9cm} | }
+%     \hline
+%     Type & Road Speed \\ \hline
+%     Tracked & 110 KPH. \\
+%     Wheeled & 150 KPH. \\
+%     \hline
+%     \end{tabular}
+% \end{center}
+
+\subsection{Amphibious Speed}
+
+Vehicular units both tracked and wheeled with this trait can move onto and off
+of rivers and other bodies of water. This statistic ranges from N/A, in which
+case the unit cannot entreat onto rivers at all, up to 53 kph. It's generally
+the unit's off-road speed, rounded up.
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Speed (KPH) & Vehicular Units \\ \hline
+    N/A & All non-marine units, which cannot enter water at all. \\
+    18--33 kph & Most cheap water-traversing transports.\\
+    40--48 kph & Most other water-traversing units.\\
+    50 kph & Most fast water-traversing units, including the LAV.\\
+    53 kph & The TPz Fuchs and TPz Fuchs Milan (FRG).\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Sailing Type}
+
+Present only for ships and controls which sorts of waters they can enter. All
+ships are capable of traversing deep water, but are weeded out below that. Deep
+Sea ships can only traverse deep sea; coasters can approach the coastline; and
+riverine boats can go down rivers, though they still cannot pass under most
+bridges.
+
+% \begin{center}
+%     \begin{tabular}{ | l | p{9cm} | }
+%     \hline
+%     Type & Vehicular Units \\ \hline
+%     River & Riverine boats (cannot pass under most bridges, however). \\
+%     Coaster & Coastal boats, which can sail on the light blue sections of water,
+%     right up to the shoreline. \\
+%     Deep Sea & Blue-water boats which can only occupy deep (dark blue) waters.\\
+%     \hline
+%     \end{tabular}
+% \end{center}
+
+\subsection{Forest Movement}
+
+Infantry move just as fast in forest as they do on lighter terrain, but
+vehicular units that move through forest are significantly slowed
+down---tracked units move at 0.50 times their off-road speed, and wheeled one at
+0.33 times their off-road speed. This means that maximum speed when moving
+through forest ranges from 17.5 to 40 kph for tracked units (50 kph for the
+M-18), and 16.5 to 36.3 for wheeled ones.
+
+\subsection{Turn Radius}
+
+Airplanes cannot turn in place like all other units (including, suspiciously,
+ships) can, and instead have a ``turn radius'' that determines, in meters, the
+radius of their turns. This is an important statistic for ground attack aircraft
+(it allows them to turn away from a target instead of evacuating after an
+attack, which helps maintain distance from enemy air superiority fighters) and
+particularly for air superiority fighters. Turn radii range from 150 to 500
+meters.
+
+\subsection{Autonomy}
+
+How far a unit can move before it runs out of gas and is not longer capable of
+moving, in kilometers. Ranges between 200 and 700 km for tanks; between 150 and
+1200 km for other vehicular units; and between 300 and 2000 for helicopters.
+Infantry, naturally, have infinite autonomy, as do, more surpisingly, supply
+units and naval units.
+
+Though naturally helicopters should be guzzling fuel whenever they are airbourn,
+in Wargame they only use up fuel when moving. Hovering does not use up any fuel,
+nor does landing or changing altitude. Thus if a helicopter runs out of fuel
+while on the move, it will stop and land in place, not crash into the ground.
+
+\begin{center}
+    \begin{tabular}{ | l | p{9cm} | }
+    \hline
+    Range (KM) & Vehicular Units \\ \hline
+    150 KM & LVKV fm/43 visual SPAAG (SWE). \\
+    200-480 KM & Old, heavy units. \\
+    500-700 KM & Most units. \\
+    700+ KM & High range transports and jeeps. \\
+    1000 KM & Very high range transports and jeeps. \\
+    1200 KM & Stolly wheeled transport (ANZAC). \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Time over Target}
+
+Airplanes do not have an autonomy, but rather a time over target, which ranges
+from 60 to 105 seconds. This statistic is of secondary importance, but does come
+in handy at times on air superiority fighters. Planes that exceed their autonomy
+run out of fuel and have to leave the battlefield, automatically going into
+``Evac Bingo''.
+
+Since airplanes always fly at the same speed, their actual autonomy is their
+speed multiplied by their autonomy (though for planes, time over target is a
+more interesting statistic). The largest autonomy in the game belongs to the
+Su-27PU, which covers slightly under 28 km on a tank of fuel.
+The lowest autonomy belongs to the A-10 Thunderbolt II---ironically because it
+has both the lowest possible speed and highest possible autonomy---which can
+only do just over 14.5 km before running out of fuel.
+
+\section{Vision}
+
+\subsection{Stealth}
+
+Stealth effects the visibility of your unit to other units. The Stealth options
+are ``Poor'', ``Medium'', ``Good'', ``Very Good'', and ``Exceptional''.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Stealth & Units \\ \hline
+    Poor & All non-recon ground vehicles, most other units.  \\ 
+    Medium & All recon scout vehicles, some stealthy units.  \\
+    Good & Basic infantry. \\
+    Very Good & Recon infantry squads. \\
+    Exceptional & Scout snipers, the F-117 Nighthawk.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+Stealth effects how well the unit is able to hide from other units, interacting
+with optics and terrain in this regard. All unit types have stealthiness in
+their domains, including ships (one example, the La Fayette) and planes (the
+F-117 Nighthawk in particular).
+
+\subsection{Optics}
+
+Regular units have either ``Poor'' or ``Medium'' optics. Units with ``Good'' or
+better optics are considered recon units, and ``Very Good'' is the baseline for
+recon. Units can have either optics or air detection; units with air detection
+have ``Poor'' optics, and vice versa.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Optics & Units \\ \hline
+    Poor & Most vehicles.\\
+    Medium & Some higher-costed combat vehicles, infantry.\\
+    Good & Cheap recon units.\\
+    Very Good & Most recon units.\\
+    Exceptional & High-end recon units.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+Coastal and riverine ships also have optics, of between ``Good'' and
+``Exceptional'' quality.
+
+A unit's optics tells you how well and out to what distance your unit can see
+the enemy. Forest or hedgerows offer cover to the unit, and make it
+significantly harder to keep it spotted; ubran sectors make infantry, in most
+cases, all but invisible to units outside of the town, unless they are firing
+their weapon. Weapon firing noise increases spotting distance, but by what
+amount is not known, though easily testable.
+
+The maximum optical spotting distance, by a unit with exceptional optics
+against a no-stealth unit on an open field, is 5000 m. The minimum spotting
+distance, by a regular infantry unit intra-town against an exceptionally
+stealthy occupier, is 450 m. The most important values to know are 3500 m, the
+open-field spotting distance of a ``Very Good'' recon unit, and 2150 m, the
+effectiveness of the same against forest or hedgelines.
+
+For a breakdown of how Optics interacts with Stealth: 
+\url{https://www.dropbox.com/s/l2u8w7tuj7igiul/WargameRD_Hidden_Knowledge_Spreadsheet.xls}.
+
+\subsection{Air Detection}
+
+Units which are targetted at the air domain---airplanes and anti-air
+units---have no optics, but air detection instead.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Air Detection & Units \\ \hline
+    Medium & The B-5---which, we will see, breaks a lot of rules.\\
+    Good & Low-cost anti-air units, most low-cost planes.\\
+    Very Good & Most anti-air units, most planes.\\
+    Exceptional & High-end air superiority fighters.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+Air detection lengths are not currently know. Note that ``Good'' optics is
+anything but for airplanes---the opposing aircraft can get to within
+medium AAM firing range before it is spotted with these optics. And the B-5 is
+just blind, really.
+
+Since airplanes fly at roughly the same altitude relative to one another, their
+spotting radius given any particular level of optics is higher than that of
+ground-based anti-air units, which have to reach up to the aircraft's altitude.
+
+\subsection{Optics Sea}
+
+Naval optics exist seperately from regular optics, but naval units can be
+sighted using regular optics as well: the difference is that units with naval
+optics are able to spot ships out much further, as this optics
+type is grossly more effective on the water (and does nothing on land).
+Nonetheless, recon units can be used to scout ships (all but one lack any
+stealth, and there's no cover on the water, after all).
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Optics Sea & Units \\ \hline
+    Good & Lynx HA S.2 ASM helicopter.\\
+    Very Good & Some ships, most ASM helicopters.\\
+    Exceptional & Most capital ships, some ASM helicopters.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Weapon Firing Noise}
+
+Some weapons are ``noiser'' then others, and this is simulated in the engine
+with regards to weapons firing. Most weapons, when fired, greatly increase the
+ease with which a unit can be spotted, but some do more than others---
+sometimes units can fire their weapons without being spotted at all. A few
+``silenced'' weapons, carried by infantry, are completely silent, and make the
+unit no easier to spot at all.
+
+Units firing non-silenced weapons are 1 to 8 times as easy to spot. This makes
+the maximum spotting distance in the game, going off of the values in the previous
+section, 40000 m, or 40 km. It's rather unlikely, however, that nothing will
+block the view of spotter at these ranges, at least on the ground.
+
+\section{Damage Resistance}
+
+\subsection{Strength}
+
+All units in Wargame have a certain set amount of health or ``strength'', ranging
+from 2 to 15 for most units, and between 40 and 300 for naval ones. Infantry
+units range the most in health for standard units, coming in squads anywhere
+between two-man sniper teams to fifteen-man heavy infantry and militia squads;
+ten is the standard amount across all categories, and is particularly
+standardized among air units and tanks, which emph{almost} never veer from that
+count.
+
+\begin{center}
+    \begin{tabular}{ | l | p{7.5cm} | }
+    \hline
+    Strength & Infantry Units \\ \hline
+    2 & Scout snipers, ATGM teams, MANPADS teams.  \\ 
+    5 & Light scouts, Specialist infantry squads. \\ 
+    10 & Line infantry squads. \\
+    15 & Heavy and Militia infantry squads. \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{7.5cm} | }
+    \hline
+    Strength & Helicopter Units \\ \hline
+    4 & Utility helicopters. \\
+    6 & Light helicopters. \\ 
+    8 & Medium helicopters. \\ 
+    10 & Heavy helicopters. \\ \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{7.5cm} | }
+    \hline
+    Strength & Vehicular Units \\ \hline
+    5 & Light units, particularly jeeps. \\
+    10 & Everything else. \\ \hline
+    \end{tabular}
+\end{center}
+
+A unit's health is displayed below its name when selected. You can also tell at
+a glance when a unit is at low health by a ``repair'' icon that appears above it
+in-game. Though the use of two to ten blocks for health seems to imply that unit
+health can only be a whole number, this is not true---the game engine
+calculates health as a float with 32 units of accuracy, and then rounds up or
+down when appropriate to give you the displayed health.
+
+The recently added B-5 is the singular exception to this common design point,
+having 15 health.
+
+\subsection{Armor}
+
+Armor is applied to the four combat sides of the unit: front, sides, back, and
+top. Most of the armor in the game comes in the form of tank armor, which ranges
+from 2/2/1/1 on the most anachronistic surplus-issue cavalry tanks (the Chinese
+ZTS-63-1 in particular) to 23/11/6/4 on the most up-armored superheavy tank (the
+Challenger 2).
+
+Combat-capable vehicles tend to have at least 1 armor on the front, sides, and
+top, and almost always at least one armor in the back, though combat systems
+mounted on jeeps and trucks usually do not. Tracked units tend to have heavier
+armor then wheeled ones when serving similar roles, which is balanced against
+their lower speeds. Wheeled units have a very low cealing to how high their
+armor can go, with the heaviest units carrying merely 2/2/1/1 armor.
+
+Although all units have the capacity to have armor in the game engine,
+not all of them use it---infantry can never have armor. Only two series of
+planes have (light) armor, the A-10 Thunderbolt II and the Su-25 Frogfoot
+series (up to 2/1/2/1 on the Su-25T), making them unique amongst planes. Most
+heavy attack helicopters have a little bit of armor as well in the front and
+the sides, with the notable exception of the AH-1 Cobra series---the most
+heavily armored helicopter, the Ka-50/Ka-52 Akula, has 1/1/1/0 armor.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | }
+    \hline
+    Max Armor & Unit Class & Units \\ \hline
+    1/1/1/0 & Helicopters & Ka-50/Ka-52 Akula \\
+    1/1/1/1 & Supply unit & MTP-LB \\
+    2/2/1/1 & Wheeled units & Various \\
+    2/1/2/1 & Airplane & Su-25T \\
+    7/3/2/2 & Infantry carrier & BTR-T \\
+    15/6/3/2 & Anti-air guns & Challenger Marksman \\
+    20/9/3/3 & Control vehicles & T-80UK \\
+    20/12/6/3 & Support vehicles & Chimera \\
+    23/11/6/4 & Tanks & Challenger 2 \\ \hline
+    \end{tabular}
+\end{center}
+
+Units with zero armor on a side vulnerable to attack can be attacked by and
+take damage from any weapon all the way down to infantry small arms. Units with
+1 armor where attacked are considered ``bulletproofed'' and take very little
+damage from small arms fire, 0.1 damage per unit of HE. Units with more than 1
+armor ignore damage from small arms fire completely, and can only be killed by
+infantry when hit with their anti-tank launchers. A high enough armor value will
+in some situations prevent a unit from taking any damage at all!
+
+\section{Range}
+
+\subsection{Range -- Ground}
+
+Range against ground is the range of the weapon against targets on the ground
+(this includes landed helicopters). Most units are able to attack in this
+domain even if only in terms of self-defense, with the notable exception of most
+missile anti-air systems. Ranges go from 455 m for infantry submachine guns to
+42 km (effectively the entire map) for super-heavy artillery systems. Range
+modifies accuracy and damage in important ways, something which will be
+discussed in the damage subtypes section.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Range & Weapon Type \\ \hline
+    455--980 m & Infantry small arms. \\
+    1225 m & Grenade launchers.\\
+    525--1400 m & Infantry launchers. \\
+    1575--1750 m & Autocannons. \\    
+    1575--2275 m & Tank cannons. \\    
+    1050--2975 m & ATGMs. \\
+    2975--3500 m & Air AGMs. \\
+    4200--5250 m & SEAD missiles. \\
+    Up to 6125 m & Naval guns. \\
+    3850--7700 m & Mortars. \\
+    12200--42000 m & Artillery. \\ \hline
+    \end{tabular}
+\end{center}
+
+Ships are considered part of the ground domain, and any weapons that can fire
+onto ground units can fire onto ships. Whether or not these weapons are
+effective are another question.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Range & ASM Type \\ \hline
+    4200--4900 m & Helicopter ASMs. \\
+    4200--6300 m & Air ASMs. \\
+    4900--7700 m & Ground AShMs. \\
+    5250--9450 m & Naval ASMs. \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Range -- Helicopters}
+
+Range against helicopters. Autocannons and machine guns can attack helicopters
+are close range. On planes, infrared (short) AAMs can attack planes, as can
+their cannons.
+
+Note that guided anti-air missiles that fire at helicopters that encroach their
+range will fail if the helicopter then leaves their range while the missile is
+in the air.
+
+\begin{center}
+    \begin{tabular}{ | l | p{4cm} | }
+    \hline
+    Range & Weapon Type \\ \hline
+    525 m & Grenade launchers.\\
+    525--1050 m & Machine guns.\\
+    1575 m & Autocannons. \\
+    2100--2625 m & MANPADS systems. \\
+    1750--2800 m & Anti-air guns. \\
+    2275--3325 m & IR anti-air missiles. \\
+    2100--3500 m & Radar anti-air missiles. \\
+    Up to 3500 m & Naval anti-air missiles. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{5cm} | }
+    \hline
+    Range & Weapon Type \\ \hline
+    1575 m & Unguided air-to-air rockets.\\
+    1575 m & Autocannons.\\
+    1750 m & Short AAMs.\\    
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Range -- Airplanes}
+
+Range against airplanes. Most weapons cannot attack airplanes---defense\\
+against them is the domain of dedicated anti-air units.
+
+Note that guided anti-air missiles that fire at airplanes that encroach their
+range will not fail if the airplane leaves their range while the missile is in
+the air.
+
+\begin{center}
+    \begin{tabular}{ | l | p{4.5cm} | }
+    \hline
+    Range & Weapon Type \\ \hline
+    1750--2625 m & Anti-air guns.\\
+    1820--2625 m & IR anti-air missiles.\\
+    3150--4550 m & Radar anti-air missiles. \\
+    Up to 4900 m & Naval anti-air missiles. \\
+    5600 m & PATRIOT air nukes. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\begin{center}
+    \begin{tabular}{ | l | p{4.5cm} | }
+    \hline
+    Range & Weapon Type \\ \hline
+    2100 m & Unguided air-to-air rockets.\\
+    1575--2800 m & Autocannons.\\
+    3150--4200 m & Short AAMs. \\
+    4900--7700 m & Medium AAMs. \\
+    10500--11900 m & Long AAMs. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\section{Attack Power}
+
+\subsection{Caliber}
+
+This statistic does not in of itself have any impact on the game, though
+larger-caliber weapons generally do more damage.
+
+\subsection{Ammunition Carried}
+
+The number of rounds of ammunition carried for the weapon. This statistic
+is most important for missile systems, which tend to come in limited numbers.
+In most other cases you'll run out of fuel or health before you run out of
+ammo. Since MLRS systems fire all of their rounds at once, their ammunition
+carried acts as their salvo size. Ammunition ranges from 1 (some bomber
+payloads) to 9000 (the STRV 103C's machine gun) rounds.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Magazine Size & Weapon System \\ \hline
+    2--8 missiles & Heavy anti-air systems. \\
+    4--10 missiles & Medium anti-air systems. \\ 
+    4--12 missiles & Light (IR) anti-air systems. \\
+    2--12 rockets & Infantry launchers. \\
+    20 or 50 rounds & Infantry sniper rifles. \\
+    24--48 rounds & Tank cannon rounds. \\ 
+    2--80 missiles & MLRS systems. \\
+    10--96 rockets & Unguided rockets. \\
+    330--840 rounds & Autocannons. \\
+    330--2000 rounds & Anti-air guns. \\
+    320--4800 rounds & Infantry small arms. \\
+    300--9000 rounds & Mounted machine-guns. \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection{AP Power}
+
+AP stands for ``Armor Penetration'' and is a measure of the units
+armor-penetrating power. AP ranges from ``None'' for HE-only weapons up to 30
+for high-end AGMs, and all the way up to 200 for high-end AShMs.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    AP & Weapon System \\ \hline
+    1--3 & Autocannons. \\
+    5--10 & Cluster bombs. \\
+    10--24 & Infantry anti-tank launchers. \\
+    6--24 & Tank cannons. \\
+    13--25 & ATGMs. \\
+    26--30 & AGMs. \\
+    60--200 & ASMs and AShMs. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+The formula for AP damage differs depending on whether the system is KE,
+kinetic, or HEAT, high-explosive anti tank. See those respective sections for a
+breakdown.
+
+\subsection{HE Power}
+
+HE stands for ``High Explosive''. HE damage is directed against units without
+armor, and against infantry in particular---weapons lacking AP will do their HE
+damage instead. HE ranges from 0.5 for some light machine guns all the way up to
+20 for 1000 kg bombs (and, in its hardy spirit of break design philosophies, 30
+for the B-5's 2000 kg bomb). All weapons have either AP power or HE power;
+weapons with only AP power (for instance, AGMs) cannot target infantry, which
+can only be hurt by HE damage.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    HE & Weapon System \\ \hline
+    0.5 & Flamethrowers. \\
+    0.5--1 & Small Arms. \\
+    1 & Autocannons, grenade launchers.\\
+    3--4 & Sapery launchers. \\
+    3--4 & Tank cannons.\\
+    3--8 & Air-to-air missiles. \\
+    3--9 & Anti-air missiles. \\
+    10--20 & HE Bombs. \\
+    30 & B-5. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+Infantry small arms will only do damage at units with 0 (x1.0) or 1 (x0.1)
+armor; units with higher armor, they cannot damage with their rifles. The damage
+done by other HE weapons drops less precipitously---indeed, it does full damage
+at armor 1---but still drops to 0.1 by armor 6, and to 0.01 by armor 14. For a
+full list of HE versus armor values see
+\url{https://www.dropbox.com/s/l2u8w7tuj7igiul/WargameRD_Hidden_Knowledge_Spreadsheet.xls}.
+
+The most interesting application of this mechanic is that it controls how much
+damage HE bombs do against armored units, for instance, how much damage two
+precision-guided 20-HE Paveway II can be expected to do against top armor,
+after the Nighthawk's recent buff.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l | }
+    \hline
+    Damage & Roof Armor & Units \\ \hline
+    40 & 0 & Unarmored units.\\
+    40 & 1 & Bulletproofed units. Cavalry tanks.\\
+    16  & 2 & Mid-low tiered tanks. A few suport units.\\
+    12  & 3 & Mid-heavy tiered tanks.\\
+    8  & 4 & Heavy and superheavy tanks.\\
+    6  & 5 & T-80BU superheavy tank.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+Take note of that the next time you try to Nighthawk a tank!
+
+\subsection{HEAT}
+
+Weapons with the HEAT (``High Explosive Anti Tank'') tag always do at least one
+damage, even when their AP is less then the armor of their target, and they will
+always fire if a target presents itself in range. All anti-tank missiles and
+some light tank cannons are HEAT weapons.
+
+For every unit of armor on the target less than the AP of the weapon, a HEAT
+damage source will do 0.5 more damage. So for instance, two 30 AP missiles
+attacking the 23 AP Challenger 2: $30-23=7$, $7\times 0.5=3.5$, $3.5 + 1 = 4.5$,
+and and in the end, two 30-AP missiles leave a Challenger that's barely alive,
+but alive nonetheless. No other land unit gets that honor.
+
+\subsection{KE}
+
+Weapons with the KE (``Kinetic Energy'') tag will not be able to do any damage
+if their damage output is less then the target's directed armor---instead they
+will display that their weapon is ``Inefficient''. However, every 175 m closer
+to the target from maximum range that the unit gets, its AP rises by 1. This
+allows weak tanks to seriously damage heavy ones at close ranges, and the BMPT
+to clean up weak tanks at close ranges with its autocannon, for instance. This
+is an important and desirable property for tanks to have---and indeed, the vast
+majority do. Combined with the range bonus, which also occurs every 175 m under
+maximum range, this makes maximum range an important aspect of damage output for
+these units.
+
+The formula for KE damage against units with at least one unit of armor on the
+side attacked is ((AP - Armor)/2) + 1. So a 30 AP AGM does 5 points of damage to
+a tank with 22 armor---the Challenger 2 is thus unique in that it is the only
+tank, with its 23 armor, to survive two hits from 30 AP AGMs to the front.
+
+The highest achievable gun AP in the game is a shot fired at point blank range
+by an M1A2. 24 base damage plus a 12 AP bonus makes for 36 bonus damage per
+shot, enough to one-shot any other vehicle with 17 or less armor.
+
+Against vehicles with zero armor weapons with AP will instead do exactly
+double their AP in damage. Factually this means that even the lowest-AP weapon
+will kill unarmored targets in one shot (as, excepting autocannons, they all
+deal more than the 5 AP required to do so), and is the larger half of the reason
+that bulletproofing on units is a useful property.
+
+For a tabular breakdown of AP damage see:
+\url{https://www.dropbox.com/s/l2u8w7tuj7igiul/WargameRD_Hidden_Knowledge_Spreadsheet.xls}.
+
+An important note to make is that cluster bombs do more damage then they may at
+first seem to: they deal damage against units' top armor, which is always much
+less then their ground-combat frontal armor.
+
+For a set of armor damage efficiency visualizations, see
+\url{http://imgur.com/a/TJCI7}.
+
+\subsection{Firemodes}
+
+\textbf{Fire and Forget} missiles, once launched, will behave independently of
+the launching platform. After a recent engine tweak, they also behave
+independently of whether or not the unit is still sighted after the missiles
+have been launched---you can kill units you don't see quite often.
+
+\textbf{Semi-Active} missiles must be guided to the target by their launching
+platform, though the launcher need not stay still while the missile is in the
+air. Targets that escape visual sight or exit range while the missile in
+the air will be spared a hit chance. Helicopter-launched AGMs are a
+notable exception (as are air ones), as they will continue to home while the
+target is in sight, regardless of the launch platform's range to target. This
+was a fairly recent buff.
+
+\textbf{Guided} missiles perform similarly to SemAct ones except in that they
+cannot be used on the move---the launch platform must stand still to aim, fire,
+and direct the missile, and cannot move until after an impact or a miss.
+
+Gunned weapons lack a firemode tag. Their to-hit calculations are made at
+firing, and once the round is away it will hit or miss regardless of the states
+of the target or of the launch platform.
+
+\section{Accuracy}
+\subsection{Base Accuracy}
+
+Accuracy determines, all other variables notwithstanding, how often a weapon
+will hit a target. Base accuracy ranges from 10 percent to 75 percent, with the
+exception of some ASM launch platforms, which can reach up to 85 percent
+accuracy (ships are\ldots kind of hard to miss). A weapon's damage output
+depends on its accuracy and its rate of fire: thus while 25\% accuracy is all
+right for a Vulcan firing at 122 RPM, 30\% is unusable for a MiG-21PFM loaded
+with high-value AGMs.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Accuracy & Weapon Type \\ \hline
+    10--30 \% & Machine guns.\\
+    15--70 \% & Tank cannons, autocannons.\\
+    25--65 \% & Guided missiles.\\
+    35--70 \% & ATGMs.\\
+    40--85 \% & ASMs. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Size}
+
+A unit's size applies a relatively small accuracy buff or debuff for units
+firing on it. Sizes range from ``Very Small'' to ``Big'', and this stat occurs
+in all units besides ships and planes, including infantry, which are
+universially Very Small. The magnitude of the effect ranges from -10\% to
++5\%. The cutoffs for what is considered ``medium'' or ``large'' is very
+arbitrary.
+
+\begin{center}
+    \begin{tabular}{ | l | p{3cm} | }
+    \hline
+    Size & Accuracy Change \\ \hline
+    Very Small & -10\% \\
+    Small & -5\% \\ 
+    Medium & No change. \\ 
+    Large & +5\% \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsection{ECM}
+
+ECM is a statistic present on aircraft that does what Size does for ground
+units, but to a much larger extent, causing incoming missile (and gun) fire to
+be progressively less accurate than normal. ECM ranges between 0\% and 60\%,
+where only the EF-111A Raven has 60\% ECM---the rest cap out at 50\%.
+
+\begin{center}
+    \begin{tabular}{ | l | p{3cm} | }
+    \hline
+    ALB Descriptor & Percentage Debuff \\ \hline
+    None & 0\% \\
+    Bad & -10\% \\ 
+    Medium & -20\% \\ 
+    Good & -30\% \\ 
+    Very Good & -40\% \\
+    Exceptional & -50\% \\
+    Exceptional & -60\% \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Distance}
+
+Every 175 m closer to a target a unit is below maximum range increases its
+accuracy by 5\%. Thus, at point blank range, even tank cannons which are
+noramlly 20\% accurate hit almost every shot. The maximum achievable accuracy is
+still 85\%, as always, meaning that accurate weapons, at close range, have a
+very high chance of causing a critical hit. This also means that a higher
+maximum range tends to contribute to a units accuracy in combat.
+
+This effect is present only on direct-fire weaponry---guns, autocannons,\\
+grenade launchers, and so on. Missiles do not get an accuracy bonus no matter
+what their distance to the target is---thus, ATGM teams tend to fare worse
+against target at point blank ranges than high-quality anti-tank launchers.
+
+To get a weapon's maximum accuracy bonus, divide the weapon's range by 175 and
+then round down if you get an integer, or subtract one if you get a whole number
+(you have to do this because the accuracy bonus is incremental, and because
+units cannot ever be within zero meters of one another).
+
+For example: the gun with the longest range in the game is the BMP-3's 2450 m
+range 2A70 cannon (all other cannons max out at 2275 m). 2450 / 175 = 14, and we
+subtract 1 from this to get 13. Multiply by 5\% to get the game-maximum +65\%
+accuracy bonus for firing at point blank range on land.
+
+The maximum air-to-air bonus is +75\% on 2800 m range air-to-air autocannons.
+
+The maximum naval bonus and the maximum bonus in the game is a whopping +170\%
+on the Kongo's 6125 m range main cannon.
+
+An interesting property to make note of: most, though not all, of the weapon
+ranges in Wargame are multiples of 175 m.
+
+\subsection{Veterancy Bonus to Accuracy}
+
+Probably the most important effect of veterancy is the bonus it gives to
+accuracy. These bonuses occur in multiples of 8\%.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Veterancy & Bonus \\ \hline
+    Rookie & 0\% \\
+    Trained & +8\% \\ 
+    Hardened & +16\% \\ 
+    Veteran & +24\% \\ 
+    Elite & +32\% \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Critical Hits}
+
+There is a base 1\% chance that whenever a unit is hit by a weapon it will
+recieve a critical hit with an additional, randomized, negative impact. Even
+weapons that fail to damage the unit can impart critical hits, and, naturally,
+the higher the weapons rate of fire, the larger the chance and incidence of
+critical hits it imparts. Critical hits can be inflicted on any unit---vehicle,
+tank, plane, helicopter, or ship---except infantry. Since critical hits tend to
+cause additional damage as part and parcel of their impact, critical hits caused
+by sufficiently high-damage units can insta-kill where it normally wouldn't be
+possible, or cause damage with weapons that normally could not do any. Heavy
+anti-air missile carriers generally, and BUK-M1s specifically, are famous for
+this.
+
+At the same time, the maximum accuracy in the game, accounting for all bonuses,
+is 85\%. What links critical hits and accuracy together is the fact that any
+accuracy achieved that goes above 85\% is added onto the critical hit chance
+instead.
+
+For instance, while tank cannons rarely deal criticals at extended ranges, they
+can impart life-threatening ones at point-blank ranges, a fact that
+particularly works in the favor of weaker-gunned tanks.
+
+The highest possible critical hit chance on the ground is that of super-heavy
+tank firing its main gun at point-blank range. With 70\% base accuracy, a
++32\% Elite veterancy bonus, a +60\% range bonus, and for kicks a +5\% size
+bonus, this translates to a 70\% critical hit chance.
+
+The highest critical hit in naval battles is that of a Kongo
+firing its main gun at point blank range. Kongos come in Hardened (+16\%) with
+a cannon with 40\% base accuracy, and its maximum range bonus is +170\%. This
+translates to 85\% accuracy and 40.28\% critical hit chance at point blank
+range---indeed, ships engaging in naval battles at point blank range quickly
+get covered in critical hit effects.
+
+\subsection{Stabilizers}
+
+Stabilizers, only present on guns and gunned units, are a measure of how
+accurate a weapon is while firing on the move. No weapon is as accurate firing
+on the move as it would be while standing still, but some can still maintain a
+decent rate of damage while maneuvering. Missiles do not have stabalizers, for
+reasons that should be obvious. Stabilizers used to be applied as a multiple to
+overall accuracy, but in Red Dragon this was changed to flat hit chance while
+moving. This statistic range from 0\% or ``None'', in which case the unit cannot
+fire on the move at all, to 65\% for the highest-quality heavy tank stabalizers.
+
+\subsection{Effect of Morale on Accuracy}
+
+A unit's morale has a strong effect on accuracy (the precise mechanics of
+morale are the topic of another section). The effects of morale are -20\%
+accuracy for a worried unit, -40\% for a shaken unit, and -60\% for a panicked
+one. The minimum accuracy in the game is a hilariously impotent 4\% for
+rookie innaccurate panicked machine gun units firing at the edge of their range.
+
+\section{Turrets}
+
+All weapons in the game are mounted on ``turrets'' in engine terminology, even
+when this isn't strictly the case (for instance, missile carriers).
+
+Different turrets have different cones of fire. Some have a 0 degree cone of
+fire---they must be aimed exactly at the target in order to fire (for instance,
+tank cannons).
+
+For these units the most important attribute is the unit's and the turret's turn
+rate---how quickly the unit can pivot itself and/or its weapon around to take
+another shot. This is an important attribute even with weapons with a more
+generous cone of fire (particularly airplanes) as it determines the speed with
+which they can turn into an attack.
+
+Cannons have a 0 degree cone of fire, for obvious reasons. Most
+missiles---short AAMs, medium AAMs, AGMs, AShMs---have a 70 degree cone of
+fire, but there is a great deal of variation amongst naval
+ASMs. Long AAMs have a 30 degree cone of fire. Ground-based anti-air missiles
+have a 360 degree of fire---they target independently of where their turret is
+facing.
+
+The B-5 once again breaks the rules, this time in the company of the IL-102, by
+mounting a backwards-facing turret that can only fire at units behind the plane.
+
+\section{Rate of Fire}
+
+Rate of fire tells you how quickly a weapon fires in either rounds per minute
+or in terms of reload time.
+
+The rate of fire displayed in unit cards is, in many cases, a highly derived
+statistic that makes little sense. This is particularly true of fast-firing
+machine guns and cannons, and can even affect missile carriers---the Gazelle
+341F Celtic, for instance, lists a 20 second reload time for some reason. Rate
+of fire tries to take into account a lot of in-game variables, and
+basically, completely fails to do so.
+
+\subsection{Aim Time}
+
+There is a certain aim time that takes place before every burst,
+shell, or missile, and begins as soon as the target enters sight. This does not
+account for whether or not the turret is turned to face the target---a tank
+that turns around to hit a faraway missile carrier will often manage an
+``instant'' shot because turning it turret clocked its entire aim
+time.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Aim Time & Weapon Type \\ \hline
+    0.2--1 sec & Anti-air guns. \\
+    0.4 sec & Most weapons. \\
+    2 sec & Interceptor missiles. \\ 
+    4--10 sec & Mortars. \\
+    10 sec & MLRS systems. \\
+    10--35 sec & Artillery. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+There are exceptions. Interceptor missiles have a 2 second aim time.
+
+If a unit exits vision or range, even briefly, the unit's aiming is disrupted.
+This causes missiles to auto-miss and projectile weapons currently being aimed
+to have to restart aiming.
+
+After the shot is fired, or lands or misses in the case of guided weapons, the
+unit must re-aim its weapon. taking at a minimum another 0.4 seconds to fire
+again.
+
+\subsection{Reload Time}
+
+All units have a reload time. Weapons begin their next reload cycle as soon as
+the current weapon is fired. This allows missiles fired at long ranges, for
+instance, to reload almost instantly. Note that since weapons still have to
+re-aim after shots you still have to wait a minimum of 0.4 seconds to fire
+again, but if the weapon has not finished reloading yet, you will have to wait
+longer.
+
+\subsection{Effect of Morale on Aim and Reload Time}
+
+Morale damage degrades aim time and reload time. Units take 33\% longer to aim
+and reload when worried, 100\% longer when shaken, and 200\% longer when
+panicked.
+
+\subsection{Autoloaders}
+
+However, units with autoloaders, something not explicitly shown in the game
+but which will soon be added into the game as an AUTO tag, will not take
+longer to reload their weapons---though they will still take longer to aim.
+
+See \url{http://www.wargame-ee.com/forum/viewtopic.php?f=155&t=47156} for a list
+of units with autoloaders.
+
+\subsection{Bursts}
+
+All weapons in the game are fired in bursts, even if they are only
+bursts of one in the case of missiles and tank cannons. Each burst has an
+equivalent rate of fire and equivalent burst fire time; at the end of the burst
+the unit must reload according to its reload time.
+
+The ratio of burst time to reload time is what determines a unit's rate of fire.
+
+For an analysis of AAA rates of fire see
+\url{http://www.wargame-ee.com/forum/viewtopic.php?f=155&t=47156}.
+
+The mechanics of burst fire is the primary reason why the ROF statistic in the
+armory can be so wildly inarticulate.
+
+Probably the most visible instance of burst fire mechanics is the one-two firing
+of MiG-31, 31M, and F-14 Tomcat long AAMs, with a one second delay between
+individual missiles.
+
+\subsection{Effect of Squad Size}
+
+The size of an infantry squad affects its combat ability, but not in the way you
+would expect. As the size of a squad decreases, whether due to squad size or to
+damage the squad has recieved, the unit's reload time increases. This is
+due to the way that the engine works---burst length and rate of fire are
+immutable, as infantry units are considered a special type of vehicle by the
+engine.
+
+This effect compounds with morale, making heavily damaged and suppressed
+infantry units extremely slow to fire (and extremely inaccurate at that).
+
+\section{Morale}
+
+\subsection{Suppression}
+
+All weapons in the game deal suppression damage, anywhere between 46 and 1500
+suppression damage per impact. Weapons will deal their full suppression
+in damage on imapct, but near misses will also do damage within a certain
+``suppression radius'' that is related to the weapon's dispersion
+radius.
+
+All units enter the game with 0 suppression damage, and the maximum damage a
+unit can have at any one time is 800.
+
+\begin{center}
+    \begin{tabular}{ | l | l | }
+    \hline
+    Suppression & Morale \\ \hline
+    0 & Fine. \\
+    200 & Worried. \\
+    400 & Shaken. \\
+    600 & Panicked. \\
+    800 & Suppression cealing. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+Armor has nothing to do with suppression, and for this reason even weapons which
+do no or minimal damage to a target will auto-fire at 350 m or less for
+the purposes of suppressing the target.
+
+\subsection{Suppression Cooldown}
+
+Units which have recieved suppression damage slowly recover their morale. The
+base morale recovery rate is 20 morale per second, and it is increased by
+veterancy.
+
+\begin{center}
+    \begin{tabular}{ | l | c | l | }
+    \hline
+    Bonus & Rate & Veterancy \\ \hline
+    +0\% & 20 & Rookie. \\
+    +150\% & 30 & Trained. \\
+    +200\% & 40 & Hardened. \\
+    +250\% & 50 & Veteran. \\
+    +300\% & 60 & Elite. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+A Rookie unit at 800 suppression will take 40 seconds to return to Calm, while
+an Elite one in the same position will take only 13 1/3 seconds.
+
+\subsection{Stunning}
+
+If a unit takes 300 suppression damage within the space of a second it will be
+stunned for 8 seconds, rendering it unable to do anything and breaking whatever
+action it was taking before it got stunned (helicopters can still move while stunned, but
+will flip around in the air perhaps unrealistically). Not currently know how
+long a stun lasts, but units do seem to be immune to stunning\ldots while
+stunned. They temporarily do not recover morale, however. A unit that gets out
+of a stun has to repeat its aiming cycle, though not its reload.
+
+Some say that airplanes that are stunned lose ECM protection. This has not been
+tested, but does seem likely.
+
+\subsection{Veterancy Bonus against Stun Time}
+
+Stuns are much more effective against lower-veterancy units then against more
+elite ones.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+    Bonus & Stun Time & Veterancy \\ \hline
+    -0\%  & 8 sec. &  Rookie. \\
+    -19\% & 6.4 sec. & Trained. \\
+    -39\% & 4.8 sec. & Hardened. \\
+    -60\% & 3.2 sec. & Veteran. \\
+    -80\% & 1.6 sec. & Elite. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\section{Dispersion}
+
+\subsection{Artillery and Mortar Dispersion}
+
+Dispersion is a statistic that's listed up-front on artillery and mortars. The
+lower the dispersion, the tigher the artillery's cone of fire---the more
+accurate it is.
+
+Artillery has the same dispersion at all ranges in which it can fire. True
+dispersion in the game is actually the listed dispersion divided by
+74.28571429\ldots . In-game dispersion ranges between 3640 and 9400 m, or
+between approximately 49 and 127 m.
+
+Mortars have between 2275 and 3640 m of dispersion, which translates to about 30
+to 49 m of dispersion.
+
+Artillery and mortars have half as much dispersion against locations that are
+spotted by other units.
+
+\subsection{MLRS Dispersion}
+MLRS dispersion is the same as artillery dispersion, except for the fact that
+MLRS systems have a minimum and maximum dispersion value---they are
+significantly more accurate at close ranges than at long ones.
+
+MLRS dispersion ranges wildly between 35 m minimum for the magical ATACAMS
+cluster rocket MLRS, and 2624 m for a BM-30 Smerch firing at the edge of its
+range.
+
+\subsection{Dispersion for non indirect-fire weapons}
+For non-artillery units, dispersion is important because it interplays with\\
+suppression---even when a weapon misses, if it's not a missile it can still
+cause suppression damage. You can see the dispersion of a weapon manually by
+telling it to fire pos at something---the circle that is drawn is the radius of
+your shot, and therefore, your dispersion. Highly accurate weapons can also be
+used to fire pos against targets that cannot be seen, but can be splashed.
+
+Non indirect-fire units do not list a dispersion in their statistics, but you
+can infer it from their accuracy, as there is a scalar relation.
+
+\subsection{Veterancy Bonus against Dispersion}
+
+Veterancy decreases dispersion. However, according to the armory tooltip this
+only applies to artillery units.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+    Bonus & Veterancy \\ \hline
+    -0\%  &  Rookie. \\
+    -10\% & Trained. \\
+    -19\% & Hardened. \\
+    -30\% & Veteran. \\
+    -39\% & Elite. \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Morale Malus to Dispersion}
+
+Unknown.
+
+\section{Ballistic Velocity}
+
+Different weapons in Wargame have different airspeeds. This is most important
+for missiles, which have a relatively low airspeed---the faster the missile the
+less of a chance your foe has of getting out of ranging and escaping, something
+particularly important to helicopters.
+
+Small-caliber machine guns are hitscan weapons---their bullets instantly reach
+and damage the opponent, assuming they land the shot. This is done to
+(greatly) reduce hardware stress, since bullets reach their target almost
+instantly anyway.
+
+Most missiles seem to have one of two airspeeds, a slow speed used by most
+ground-attack missiles (TOWs and down, Kokons and down), ground or naval
+ASMs, and heavy anti-air missiles, and a fast speed used for high-end
+ground-attack missiles (Hellfire, Ataka V, Vikhr, most REDFOR tank ATGMs), air
+AGMs, air ASMs, SEAD missiles, and light anti-air missiles.
+
+All cannons and autocannons seem to fire at the same high, but not instantenous,
+velocity.
+
+Testing shows that the speeds of the various air-to-air missiles are,
+approximately, 2500 meters per second for long AAMs; 2400 meters per second for
+medium AAMs; and 2100 meters per second for short AAMs.
+
+\section{Supply}
+
+Supply units contain a certain amount of supply, which are provided to units
+that have not changed morale status or been delt damage for a sufficient
+length of time (uncertain), in a certain radius. Multiple units can draw supply
+at once---there is no upper limit. There are three types of supply, fuel supplies, repair
+supplies, and ammunition supplies, and units can draw all three simultaneously.
+
+Note that, like, health, supply carried is stored as a float, but displayed as
+an integer.
+
+\subsection{Supply Rates}
+
+Supply works the same for fuel and health regardless of the unit. However, the
+supply rate for different weapons varies as it is dependent on their supply
+cost---an arbitrary number that determines how much supply a unit of ammunition
+of the weapon consumes.
+
+\begin{center}
+    \begin{tabular}{ | l | c | c | c | }
+    \hline
+    Type & Per Second Cost & Per Second Supplied & Per Unit Supplied Cost \\
+    \hline
+    	Fuel & 5 & 30 & 1/6 per unit of fuel.\\
+    	Health & 5 & 0.1 & 50 per unit of health.\\
+    	Ammo & 25 & 25 & Varies by weapon.\\
+    \hline
+    \end{tabular}
+\end{center}
+
+\subsection{Ammo Supply Rates}
+
+A unit of ammo takes anywhere between 5 and 3000 units of supply to resupply.
+This means that the maximum resupply rate is 5 units of ammunition per second,
+and the minimum is two minutes.
+
+\subsection{Air Unit Resupply}
+
+Air units automatically resupply in the airport once they have evacuated. If
+they have to resupply any of their individual weapon loadouts, they will have to
+resupply\emph{all} rounds of the weapons in that category, which can have quite
+a large effect on how long you have to wait before your unit is operationally
+available again.
+
+%\section{Derived Statistics}
+
+%These statistics aren't listed, but can be derived from other that are, or
+% from the game files.
+
+%\subsection{Weapon Firing Cycle}
+%
+%An easy calculation: the ASU-85M carries 45 cannon rounds fired individually
+% and has a rate of fire of 8 RPM. This means it takes it 5.625 minutes or 337.5
+%seconds to fire all of its rounds, with 7.5 second pauses between weapon
+%firings.
+
+%A harder calculation: the ASU-85M also carries 500 DShk MG rounds. According to
+%the unit's ``Salves'' attribute in the game files it fires five salvos, so it
+%must fire 100 rounds per salvo. With a rate of fire of 500 RPM, this translates
+%to
+
+%\subsection{Fuel Efficiency}
+
+%\subsection{Critical Hit Rate}
+
+%\subsection{Instant Kill Chance}
+
+%\subsection{Suppression Rate}
+
+\end{document}
