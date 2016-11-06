@@ -302,7 +302,7 @@ units---have no optics, but air detection instead.
     \end{tabular}
 \end{center}
 
-Air detection lengths are not currently know. Note that ``Good'' optics is
+Note that ``Good'' optics is
 anything but for airplanes---the opposing aircraft can get to within
 medium AAM firing range before it is spotted with these optics. And the B-5 is
 just blind, really.
@@ -819,32 +819,17 @@ where only the EF-111A Raven has 60\% ECM---the rest cap out at 50\%.
 
 \subsection{Distance}
 
-Every 175 m closer to a target a unit is below maximum range increases its
-accuracy by 5\%. Thus, at point blank range, even tank cannons which are
-noramlly 20\% accurate hit almost every shot. The maximum achievable accuracy is
-still 85\%, as always, meaning that accurate weapons, at close range, have a
-very high chance of causing a critical hit. This also means that a higher
-maximum range tends to contribute to a units accuracy in combat.
+This needs further investigation.
 
 This effect is present only on direct-fire weaponry---guns, autocannons,\\
 grenade launchers, and so on. Missiles do not get an accuracy bonus no matter
 what their distance to the target is---thus, ATGM teams tend to fare worse
 against target at point blank ranges than high-quality anti-tank launchers.
 
-To get a weapon's maximum accuracy bonus, divide the weapon's range by 175 and
-then round down if you get an integer, or subtract one if you get a whole number
-(you have to do this because the accuracy bonus is incremental, and because
-units cannot ever be within zero meters of one another).
-
 For example: the gun with the longest range in the game is the BMP-3's 2450 m
 range 2A70 cannon (all other cannons max out at 2275 m). 2450 / 175 = 14, and we
 subtract 1 from this to get 13. Multiply by 5\% to get the game-maximum +65\%
 accuracy bonus for firing at point blank range on land.
-
-The maximum air-to-air bonus is +75\% on 2800 m range air-to-air autocannons.
-
-The maximum naval bonus and the maximum bonus in the game is a whopping +170\%
-on the Kongo's 6125 m range main cannon.
 
 An interesting property to make note of: most, though not all, of the weapon
 ranges in Wargame are multiples of 175 m.
@@ -884,23 +869,11 @@ this.
 At the same time, the maximum accuracy in the game, accounting for all bonuses,
 is 85\%. What links critical hits and accuracy together is the fact that any
 accuracy achieved that goes above 85\% is added onto the critical hit chance
-instead.
+instead. POSSIBLY WRONG
 
 For instance, while tank cannons rarely deal criticals at extended ranges, they
 can impart life-threatening ones at point-blank ranges, a fact that
 particularly works in the favor of weaker-gunned tanks.
-
-The highest possible critical hit chance on the ground is that of super-heavy
-tank firing its main gun at point-blank range. With 70\% base accuracy, a
-+32\% Elite veterancy bonus, a +60\% range bonus, and for kicks a +5\% size
-bonus, this translates to a 70\% critical hit chance.
-
-The highest critical hit in naval battles is that of a Kongo
-firing its main gun at point blank range. Kongos come in Hardened (+16\%) with
-a cannon with 40\% base accuracy, and its maximum range bonus is +170\%. This
-translates to 85\% accuracy and 40.28\% critical hit chance at point blank
-range---indeed, ships engaging in naval battles at point blank range quickly
-get covered in critical hit effects.
 
 \subsection{Stabilizers}
 
@@ -1008,11 +981,10 @@ panicked.
 
 \subsection{Autoloaders}
 
-However, units with autoloaders, something not explicitly shown in the game
-but which will soon be added into the game as an AUTO tag, will not take
-longer to reload their weapons---though they will still take longer to aim.
+However, units with autoloaders, something not explicitly shown in the game, 
+will not take longer to reload their weapons---though they will still take longer to aim.
 
-See \url{http://www.wargame-ee.com/forum/viewtopic.php?f=155&t=47156} for a list
+See \url{http://forums.eugensystems.com/viewtopic.php?f=189&t=47156} for a list
 of units with autoloaders.
 
 \subsection{Bursts}
