@@ -28,9 +28,21 @@ All numbers and counts in this guide refer to Wargame: Red Dragon circa late-201
 
 \section{Getting Started}
 
-This guide is written from the perspective of the Wargame Modding Suite. If you have not done so already, download this wonderful tool and point it to the most recent version of your game (refer to documentation elsewhere for instructions on how to do that).
+This guide is written from the perspective of the Wargame Modding Suite. If you have not done so already, download this wonderful tool.
 
-Wargame: Red Dragon internals are organized in terms of files of the "ndfbin" type. The most important of these is "everything.ndfbin", which contains nearly all easily modifiable attributes of the game. This file, decompiled by the Modding Suite, in turn consists of a couple hundred tables. These tables, or "modules", are linked to one another within a complex hierarchy.
+When you open up the Modding Suite for the first time, it should be able to find a reference to your most recent copy of Wargame: Red Dragon. If it does not, or you want to switch versions, click on "Open" in the taskbar, then navigate to your game's copy of the data file you would like to open.
+
+Wargame database files are backed up, with the structure and contents of each previous version of the game backed up in its own folder on disk. The practical reason for this additional use of space is that it enables the in-game replay viewer, which obviously relies on the gamestate being what it was at the time that the game took place. It does take up additional space, but the files are relatively small compared to the game's art and physics assets, and having the game's history also lets us explore what it looked like in the past (something most other games don't allow).
+
+As a consequence of this organization, files related to various patch versions of the game are stored as subdirectories of a top-level data folder: \break \texttt{C:/Steam/steamapps/common/Wargame Red Dragon/Data/WARGAME/PC} on my disk. If you open this folder you will see a descending list of folders, each of which refering to a specific patch version of the game. The higher the number, the more recent the version. Naturally the highest number corresponds to the most recent version, and the lowest number to the first release version.
+
+The most recent version as-of-writing is 510049986. Each version of the game will be a similar 9-digit string. The first two elements are the major version number, while the last five (last three in older versions) is the patch number.
+
+Each patch is accompanied by a Eugen changelist in the forums, so to find out what changes were applied in which patches, search that number in their forums. The major content patches are described in \link{http://forums.eugensystems.com/viewtopic.php?f=155&t=57546}{series of forum posts}; go there to see them.
+
+Every folder contains \texttt{NDF\_Win.dat}, which is the primary database file for that version of the game. Information internal to Wargame follow an ascending schema: information and assets introduced in the first version of the game which do not recieve any patches along the way (like almost all the art assets, for example) continue to live wherever they were first introduced, and do not get copied "up" the patch list. When Wargame initialized, the Loading Screen is actually the game working to link all of these changes up together to get a working schema of the current version of the game.
+
+Within NDF\_Win, things are organized in terms of files of the "ndfbin" type. The most important of these is "everything.ndfbin", which contains nearly all easily modifiable attributes of the game. This file, decompiled by the Modding Suite, in turn consists of a couple hundred tables. These tables, or "modules", are linked to one another within a complex hierarchy.
 
 The most important table, for our purposes, is TUniteAuSolDescriptor. This table is top-level object describing all of the purchasable and playable units in the game (as well as a variety of deprecated and occassional "special" ones):
 
@@ -61,17 +73,13 @@ An always-present non-localized unit name. Sometimes not entirely serious: for i
 
 \subsection{StickToGround}
 
-True if the unit is a helicopter, else null.
-
-Unkown: does this have any effect?
+True if the unit is a ground unit, else null.
 
 \subsection{ManageUnitOrientation}
 
 Null for infantry units, True otherwise.
 
-Infantry are implemented as a special kind of vehicle in-game, and this flag likely tells the engine to treat them in some special way. But its precise effect is unknown.
-
-See also AutoOrientation in MouvementManager.
+It is believed that this controls whether or not the unit can be given a position orientation command (Shift+Drag) in-game. 
 
 \subsection{HitRollSizeModifier}
 
@@ -102,19 +110,25 @@ At present time, units explode with one of just 11 animations. This includes nul
 
 \subsection{IconeType}
 
-Speculatively, appears to control the light blue overlay that appears when using a unit to target another unit. Options are 1 (default), 2 (artillery and anti-ship missiles), and 3 (anti-air).
+Unknown. Options are 1 (default), 2 (artillery and anti-ship missiles), and 3 (anti-air).
 
 \subsection{PositionInMenu}
 
-Don't know.
+Does nothing.
 
 \subsection{NameInMenuToken}
 
-This localization hash controls the display name of the unit in the menu. So for example if you were to want to change the name of this unit to that of another unit, inject the designated unit's token into the source unit's token.
+This localization hash controls the display name of the unit in the menu.
+
+As previously mentioned, Wargame database files are backed up, with the structure and contents of each previous version of the game backed up in its own folder on disk. To get what this token corresponds to, we actually have to exit NDF\_Win.dat and load ZZ\_Win.dat instead (if this file is not present in your folder, check the immediately prior patch versions, one of them should have it). This file contains all of the text localization strings for the game. The \texttt{unites.dic} in particular contains all of the English-language menu texts, and if you for example look up our Dana's 8E14D59D2C0F8600 hash in this table you will find that it is, indeed, called the DANA in-game.
+
+Thus you can change this yourself by editing this hash or by creating new ones and refering to them using the Modding Suite.
+
+It needs to be noted that this piece of text corresponds to the name in the armory screen only. A second hash with the same name stored in the UnitType submodule, which we will get to later, controls the unit's name in-game.
 
 \subsection{AliasName}
 
-A better-formed name for the unit. Does nothing in-game. Not editable. Units which have localized names do not have an AliasName, e.g. this entry is simply null.
+A better-formed name for the unit. Does nothing in-game. Not editable. Some are null.
 
 \subsection{Category}
 
@@ -134,15 +148,44 @@ NATO units are null, PACT units are 1.
 
 \subsection{MotherCountry}
 
-An abbreviation for the country of origin of this unit. Currently one of 'URSS', 'US', 'POL', 'RDA', 'CHI', 'NK', 'TCH', 'ISR', 'UK', 'FR', 'RFA', 'ROK', 'HOL', 'ANZ', 'CAN', 'SWE', 'JAP', 'DAN', 'NOR'. Note that these are French acronyms, hence why URSS is "backwards".
+An abbreviation for the country of origin of this unit.
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Value & Nation\\ \hline
+	US & United States\\
+	UK & United Kingdom\\
+	FR & France\\
+	RFA & West Germany\\
+	CAN & Canada\\
+	SWE & Sweden\\
+	NOR & Norway\\
+	DAN & Denmark\\
+	ANZ & ANZAC\\
+	JAP & Japan\\
+	ROK & South Korea\\
+	ISR & Israel\\
+	HOL & The Netherlands\\
+	URSS & Soviet Union\\
+	RDA & East Germany\\
+	TCH & Czechoslavakia\\
+	POL & Poland\\
+	CHI & China\\
+	NK & North Korea\\
+    \hline
+    \end{tabular}
+\end{center}
+
+These are French acronyms, hence why URSS is "backwards".
 
 \subsection{ProductionYear}
 
-The year that the unit was produced. This is the only unit of text contained in everything.ndfbin which is reproduced faithfully in-game in the armory.
+The year that the unit was produced. Note that this variable only controls the text; whether or not the unit is actually available in the unit-year categories for deck building (Cat A, Cat B, Cat C) is controlled elsewhere.
 
 \subsection{MaxPacks}
 
-The number of cards of this infantry which are available for deck-building. Ranges from 1 (542 instances) or 2 (995 instances, the most common) up to 9 (16 instances, for certain transports).
+The number of cards of this unit which are available for deck-building. Ranges from 1 (542 instances) or 2 (995 instances, the most common) up to 9 (16 instances, for certain transports).
 
 \subsection{Factory}
 
@@ -160,18 +203,18 @@ Armory tab. Values are:
 	10 & Recon & 197\\
 	11 & Helicopters & 142\\
 	12 & Ships & 65\\
-	13 & Anti-Air & 259\\
+	13 & Support & 259\\
     \hline
     \end{tabular}
 \end{center}
 
 \subsection{ProductionPrice}
 
-The in-game production price. This value isn't provided straight, but is instead embedded into a Collection of five integer elements. This means that production price may have originally been intended to be dependent on the veterancy of the unit, but this mechanic is not used in-game. Instead, the first value in this list is the actual price, and the remainder are all placeholder values of 15.
+The in-game production price. This value isn't provided straight, but is instead embedded into a Collection of five integer elements. This may be because production price was at one point experimentally dependent on the veterancy of the unit, but this mechanic is not used in-game. Instead, the first value in this list is the actual price, and the remainder are all placeholder values of 15.
 
 \subsection{MaxDeployableAmount}
 
-A Collection of integers. The amount of copies of this unit deployable at each veterancy level, per card. 0 for veterancies this unit is not available at.
+A Collection of integers. The amount of copies of this unit deployable at each veterancy level, per card. 0 for veterancies this unit is not available at. Ordered Rookie to Elite.
 
 \subsection{ShowInMenu}
 
@@ -179,7 +222,7 @@ A Collection of booleans which is always set to True for true units and always s
 
 \subsection{ProductionTime}
 
-How long it takes, between an air unit being clicked on or a land unit being places on the map, for the unit to appear where it's expected. Airplanes have a ProductionTime of null (instantaneous), most units have a ProductionTime of 10, and helicopters have a ProductionTime of 5. This value is in seconds.
+How long it takes, between an air unit being clicked on or a squad of land units being places on the map, for the unit to appear where it's expected. Airplanes have a ProductionTime of null (instantaneous), most units have a ProductionTime of 10, and helicopters have a ProductionTime of 5. This value is in seconds.
 
 \subsection{CoutEtiole}
 
@@ -199,7 +242,21 @@ Controls which flag gets displayed in the corner of the card display.
 
 \subsection{UnitTypeTokens}
 
-A list of LocalizationHash instances which control which armory-screen filters the unit falls inside of.
+A list of LocalizationHash instances which control which deck type the unit falls into. Valid inputs are:
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Kind & Hash\\ \hline
+	Mechanized & 8BD43C9757360E00\\
+	Armored & 5C76718B57360E00\\
+	Marine & 23B8605ED9380000\\
+	Airborne & 0BB7685ED9380000\\
+	Motorized & 5E767965E3000000\\
+	Support & DAD77965E3000000\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{UnitMovingType}
 
@@ -229,13 +286,17 @@ Wheeled units in general (2, 3, 7) move at 150 kph on roads, regardless of off-r
 
 Tracked units in general (5, 8) move at 110 kph on roads, regardless of off-road speed (specified in MouvementManager), and move at 50\% of their off-road speed in forests. Amphibious tracked units (8) can additionally enter water, moving at a globally-set 50\% of their off-road speed when doing so.
 
+It should be noted that while 150 kph and 110 kph are global values, they are not controlled globally. There is instead a multiplier in another submodule, MouvementDescriptor, called RoadSpeedBonus, which is always set to exactly what it has to be set to to make this fact true. Amphibiousness, by contrast, is universial: if the unit can tread water, it will do so at half of its off-road speed, and as no other variables control this behavior this happens without exceptions.
+
 \subsection{VitesseCombat}
 
-The speed of the unit when it is in combat (e.g. whenever the unit can see enemy units). It is surprising that this is a top-level variable. The input is an unsigned int; for information on what the unit of measurement is, refer elsewhere in this guide.
+According to the name, the speed of the unit when it is in combat (e.g. whenever the unit can see enemy units). It is surprising that this is a top-level variable and unknown whether or not this variable has any effect. The input is an unsigned int; for information on what the unit of measurement is, refer elsewhere in this guide.
 
 \subsection{UpgradeRequired}
 
 Contains a reference to another TUniteAuSolDescriptor. When this unit is pulled up in the armory, assuming you did all of the other categorization placements right, this unit will display after the linked unit in the horizontal list. If this is set to null, the unit will appear either on its own line or as the first unit in the horizontal list, if another unit references it itself.
+
+Five is the maximum value, as no more are allowed to stack in the armory; any number higher will move the unit to its own line. It's also notable that when transport units are linked via UpgradeRequired, if one unit is made available as a transport for a unit all of its children are, too (for example: enabling Mi-8T for Gornostrelki also enables Mi-8TVs).
 
 \subsection{IsPrototype}
 
@@ -274,7 +335,7 @@ Unknown.
 
 \subsection{NameInMenuToken}
 
-A copy of the top-level attribute.
+Just like its top-level NameInMenuToken, except that this copy of the hash controls what the unit's name is in-game, wheras the top-level one controls what it is in-menu. For more details see the UniteAuSol NameInMenuToken field.
 
 \subsection{GenerateName}
 
@@ -282,7 +343,42 @@ Unknown. Always True.
 
 \subsection{Filters}
 
-Unknown. May have to do with which filters this unit falls under in the armory.
+This complex field is a Map containing four sets of things.
+
+The first element is an in-game hover name which displays when a unit is hovered over by an enemy. An example value is "Anti-Air Vehicle".
+
+The second element controls which of the year-based deck types the unit falls into (Cat A, Cat B, or Cat C). A dictionary for the values is:
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Kind\\ \hline
+41E22D4DD9380000 & 1980 and less\\
+46E22D4DD9380000 & 1981 to 1985\\
+81E22D4DD9380000 & 1986 and later\\
+    \hline
+    \end{tabular}
+\end{center}
+
+Note that it is this field, not the YearProduced top-level variable (which only controls an element of the card display), which controls which year-limited deck categories the unit is available in.
+
+The third element is a set of the deck types that the unit appears in. But wait, you may ask, doesn't the top-level UnitTypeTokens already do that? It turns out that to make things work you have to properly set both that value and this one. Again, here's a list of valid hashes:
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Kind & Hash\\ \hline
+	Mechanized & 8BD43C9757360E00\\
+	Armored & 5C76718B57360E00\\
+	Marine & 23B8605ED9380000\\
+	Airborne & 0BB7685ED9380000\\
+	Motorized & 5E767965E3000000\\
+	Support & DAD77965E3000000\\
+    \hline
+    \end{tabular}
+\end{center}
+
+The fourth element is a set of hashes for miscellaneous filters that the unit falls under in the armoy. So for example if you want a unit to fall the "Cavalry Tank" filter there, you would need to set the appropriate hash here. The values for these hashes in particular are located in the interface\_ingame.dic file inside ZZ\_Win.dat.
 
 \subsection{MotherCountry}
 
@@ -300,18 +396,37 @@ Unknown. Usually, maybe always null.
 
 The CIWS statistic, as displayed in the armory, carried by a naval unit. Set to null for non-naval units and for naval units without CIWS. This is a localization hash; to set it to a particular value, use one of the following:
 
-Exceptional = 4F233E0000000000
-Very Good = 4E96452000000000
-Good = 4E96450000000000
-Medium = D672711906000000
-Bad = CEC2000000000000
-None = Set the value to null.
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Kind & Hash\\ \hline
+	Exceptional & 4F233E0000000000\\
+	Very Good & 4E96452000000000\\
+	Good & 4E96450000000000\\
+	Medium & D672711906000000\\
+	Bad & CEC2000000000000\\
+	None & null\\
+    \hline
+    \end{tabular}
+\end{center}
 
 Changing this value does NOT change a ship's CIWS, it only changes the quality of CIWS reported on the card in-game. In other words, this only controls a text display element.
 
 \subsection{Sailing}
 
-The ship's sailing type. This is similarly a LocalizationHash controlling a text display, not the real value (which is in MouvementControl). We don't have an equivalency table at hand, sorry.
+The ship's sailing type. This is similarly a LocalizationHash controlling a text display, not the real value (which is in MouvementControl). Values are:
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Kind & Hash\\ \hline
+	Deep Sea & CBD32D65B4780000\\
+	Coastal & CBD33165B4780000\\
+	Riverine & CBD33565B4780000\\
+	None & null\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \section{TDebugModuleDescriptor}
 
@@ -320,6 +435,106 @@ There is nothing interesting here.
 \section{TStateEngineModuleDescriptor}
 
 There is nothing interesting here.
+
+\section{TFlagsModuleDesciptor}
+
+Uknown.
+
+\section{TCriticalEffectModuleDesciptor}
+
+A reference to one of a small number of tables which control the critical effects a unit may be subjected to that occur due to fire from enemy units (critical effects affecting movement are in a different module, Mouvement). We will omit further details, as the resultant tables are various, singular, and pretty easy to parse.
+
+\section{TTargetCoordinatorModuleDescriptor}
+
+There is nothing interesting here.
+
+\section{TPositionModuleDescriptor}
+
+\subsection{ControllerName}
+
+Not interesting.
+
+\subsection{InGeoDb}
+
+Unknown.
+
+\subsection{ClampInWorld}
+
+Unknown.
+
+\subsection{GfxDescriptorPorteur}
+
+Links to a module containing information of interest to the physics engine, which shouldn't be messed with.
+
+\subsection{Radius}
+
+Unknown.
+
+\subsection{AddToHexagonMap}
+
+Unknown.
+
+\subsection{PorteurMustBeVisible}
+
+Unknown.
+
+\subsection{RelativeScanningPosition}
+
+Unknown.
+
+\subsection{CameraFollower}
+
+Links to a TGfxDescriptorCameraFollower object that sets variables for the camera, meant for focus-watching a plane, land unit, ship, or helicopter.
+
+\subsection{MustAllowZoneIndice}
+
+Unknown.
+
+\subsection{LowAltitudeFlyingAltitude}
+
+If the unit is a helo, the altitude that the helo flies at by default.
+
+\subsection{NearGroundFlyingAltitude}
+
+If the unit is a helo, the altitude the helo goes to when told to descend (which helps with stealth, but is barely ever used anymore).
+
+\subsection{ClampOutMap}
+
+Unknown, always null.
+
+\subsection{HasNearlyNullBBox}
+
+Unknown, always null.
+
+\subsection{\_ShortDatabaseName}
+
+Useless, always null.
+
+\section{TInfammableModuleDescriptor}
+
+There is nothing interesting here.
+
+\section{TLinkTeamModuleDescriptor}
+
+There is nothing interesting here.
+
+\section{TModernWarfareExperienceManagerDescriptor}
+
+\subsection{ControllerName}
+
+Disinteresting.
+
+\subsection{CanWinExperience}
+
+There are only two possible table references: one with CanWinExperience set to null, which is applied to supply units and units without weapons, and one with CanWinExperience set to True, for everything else.
+
+\subsection{ExperienceGainBySecond}
+
+Always set to 0.1.
+
+\subsection{KillExperienceBonus}
+
+Always set to 2.5
 
 \section{TIAStratModule}
 
@@ -339,7 +554,9 @@ Contains a pointer to the unit's primary mesh.
 
 \section{TMissileCarriageModuleDescriptor}
 
-Contains pointers to art resources constituting missile carraiges (which get reused).
+Contains pointers to art resources constituting missile carriages, which control all of the art involved in units having and then not having certain visible weapon elements on-body. So for example, a F-15D Eagle with its bombs would look different from an F-15D Eagle without its bombs, obviously. That's controlled here.
+
+We will omit further details, except to say that the difficulties of working with this module make modding planes and helicopters (some of which have this module, some of which haven't) challenging.
 
 \section{TCommandManagerModuleDescriptor}
 
@@ -347,7 +564,7 @@ When this module is set up properly, the unit is treated as a command unit in-ga
 
 \section{TGhostManagerModuleDescriptor}
 
-Unknown.
+This module controls things related to what happens when a unit is spotted, but not identified: what you see when something is shaded in black. 
 
 \section{TScannerModuleDescriptor}
 
@@ -419,7 +636,7 @@ The number of units of fuel that this unit can stockpile.
 
 \subsection{FuelMoveDuration}
 
-Autonomy in kilometers; the same as the statistic displayed in the Armory.
+Autonomy in seconds. Appears to b the same as the T.O.T statistic displayed in the Armory.
 
 \section{TMovementHandlerLandVehicleDescriptor}
 
@@ -431,7 +648,7 @@ Uninteresting.
 
 \subsection{Maxspeed}
 
-The unit's max speed, in engine distance units (the meaning of which is covered elsewhere).
+The unit's max speed, in engine distance units (see the next major section for unit explanations).
 
 \subsection{UnitMovingType}
 
@@ -543,7 +760,7 @@ Always 6, for air (other values are 4 for sea and 1 for land).
 
 \subsection{FlyingAltitude}
 
-The height the plane usually flies at.
+The height the plane prefers to fly at. Notably, all planes spawn at the same height then ascend or descend to their prefered height.
 
 \subsection{MinimalAltitude}
 
@@ -581,9 +798,79 @@ Unknown. Always "Train\_Arriere".
 
 Does a bunch of things which control the circle that gets drawn when a unit is selected.
 
+\section{TGroupeCombatModuleDescriptor}
+
+This module, which is only attached to infantry units. This table has a submodule, TUniteBehaviorDescriptor, which has a large number of variables controlling the unique aspects of infantry combat stats in the game.
+
+Amongst the various TUniteBehaviorDescriptor tables, all of the variables contained therein are the same (making them globals, essentially) except for two: NbSoldatInGroupeCombat, which controls the number of men to the squad, and AnimationFastAccessor, whose purpose is unknown.
+
+\section{TTransportableModuleDescriptor}
+
+This module, which is only attached to infantry units, controls what transports are available to an infantry unit.
+
+\subsection{ControllerName}
+
+Not interesting.
+
+\subsection{Categories}
+
+Always a list with two elements: "infantrie" and "barge".
+
+\subsection{SuppressDamageRatioIfTransporterKilled}
+
+This float controls what percentage of the unit's total suppression cealing (which is 800 for all units) the unit will take in suppression damage if it is on a transport, the transport is destroyed, and the unit survives.
+
+As such it contains direct references to other transporter units' TUniteAuSolDescriptor instances.
+
+\subsection{TransportListAvailableForSpawn}
+
+This contains a Collection of references to one or more transporter units' TUniteAuSolDescriptor instances. Those units become available to this unit as an on-card transport.
+
+Note that, due to the previously described mechanics of the UpgradeRequired top-level variable, a reference in this table to a transporter unit with an upgrade path will cause all of those other units to also become available. So the exactly list of transporters for this unit may be longer than it appears to be from this list alone!
+
+\subsection{TransportedTexture}
+
+Unknown. Transported units have no texture, no?
+
+\section{TModuleModernWarfareSupplyDescriptor}
+
+\subsection{ControllerName}
+
+Uninteresting.
+
+\subsection{SupplyCapacity}
+
+Units of supply (liters) this unit carries.
+
+\subsection{DeploymentDuration}
+
+How long after a unit has stopped before it begins to provide supply, in seconds. Always 0.2 seconds currently, except for FOBs, which have this value set to null.
+
+\subsection{WithdrawalDuration}
+
+How long after a unit is ordered to start moving before it stops providing supplies and starts moving. Currently always 0.2 seconds currently, except for FOBs, which have this value set to null.
+
+\subsection{SupplyPriority}
+
+It is possible for supply units to supply other supply units; for example a common tactic is to shorten the supply chain trip length by buying a Mi-26, dropping it halfway between the FOB and the battlefield, and running ammo trucks between the helo and the front line. The lower this number the lower in this stack this unit is, and the greater the number of other supply units this supply unit could itself draw from. Generally 1-to-1 with total supply onboard: the bigger the capacity, the lower the SupplyPriority.
+
+\subsection{SupplyDescriptor}
+
+Links to another module, an instance of TModernWarfareSupplyDescriptor, which contains the variables used for calculating supply cost and supply per second. There are only two instances of TModernWarfareSupplyDescriptor, one for FOBs and one for all other supply units. The latter includes the following essentially-globals:
+
+\includegraphics[width=0.8\textwidth]{screenshot_supply}
+
+The former:
+
+\includegraphics[width=0.8\textwidth]{screenshot_supply_fob}
+
 \section{TWeaponManagerDescriptor}
 
+WRITE THIS UP.
+
 \section{TModernWarfareDamageModuleDescriptor}
+
+WRITE THIS UP.
 
 \section{TAppearanceModelDescriptor}
 
