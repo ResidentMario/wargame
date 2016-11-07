@@ -638,9 +638,9 @@ The number of units of fuel that this unit can stockpile.
 
 Autonomy in seconds. Appears to b the same as the T.O.T statistic displayed in the Armory.
 
-\section{TMovementHandlerLandVehicleDescriptor}
+\section{TMouvementHandlerLandVehicleDescriptor}
 
-This module will only be present if the vehicle in question is, indeed, a land unit.
+This module is present in the TMouvementDescriptor slot if and only if the unit is a land unit, or, interestingly enough, a ship.
 
 \subsection{ControllerName}
 
@@ -656,13 +656,13 @@ The same as that set in TUnitMouvementDescriptor.
 
 \subsection{SpeedBonusOnRoad}
 
-A multiplier on the unit's base speed. Always set to whatever it needs to be set to to give the unit 110kph tracked speed or 150kph wheeled speed, meaning that these are constants but must be set on the local level!
+A multiplier on the unit's base speed. Always set to whatever it needs to be set to to give the unit 110kph tracked speed or 150kph wheeled speed, meaning that these are constants but must be set on the local level! If this unit is a ship, this value is instead set to null.
 
 \subsection{TempsDemiTour}
 
-The amount of time, in seconds, it takes for a unit to make a half-turn (the translation is literal). If you tell a unit to move in a direction directly opposite to its current orientation, it will do a reverse-accelerate V-turn to the side, and this variable controls how long this takes.
+The amount of time, in seconds, it takes for a unit to make a half-turn (the translation is literal). If you tell a land unit to move in a direction directly opposite to its current orientation, it will do a reverse-accelerate V-turn to the side, and this variable controls how long this takes. Ships will execute their turn completely in place (unrealistically but necessarily, given how the game works).
 
-Presumably this value also controls how long it takes to make turns that are less than 360 degrees, but still significant. The cutoff value at which a unit starts to make a reverse turn, instead of just turning in place, is unknown.
+Presumably this value also controls how long it takes to make turns that are less than 180 degrees, but still significant. The cutoff value at which a unit starts to make a reverse turn, instead of just turning in place, is unknown.
 
 \subsection{MaxAcceleration}
 
@@ -687,6 +687,8 @@ This is set to certain magic values for ship units which are allowed and not all
 Otherwise null.
 
 \section{TMouvementHandlerHelicopterDescriptor}
+
+This module is present in the TMouvementDescriptor slot if and only if the unit is a helicopter.
 
 \subsection{ControllerName}
 
@@ -749,6 +751,8 @@ A module pointer whose contents is a TCriticalEffectModuleDescriptor describing 
 The amount of time, in seconds, it takes for a unit to make a half-turn (the translation is literal). For helicopters this requires a dive to the left. It's uncertain whether or not this variable is still used for anything.
 
 \section{TMouvementHandlerAirplaneDescriptor}
+
+This module is present in the TMouvementDescriptor slot if and only if the unit is a plane.
 
 \subsection{Maxspeed}
 
@@ -864,17 +868,532 @@ The former:
 
 \includegraphics[width=0.8\textwidth]{screenshot_supply_fob}
 
-\section{TWeaponManagerDescriptor}
+\section{TWeaponManagerModuleDescriptor}
 
-WRITE THIS UP.
+This is one of the two most interesting modules overall, and easily the most complicated one. This module controls everything that there is to know about a unit's weaponry, and to understand its logical structure is to understand how weapons in this game work.
+
+Each TWeaponManagerModuleDescriptor contains a Collection known as a TurretDescriptorList whose items are individual TTurretTwoAxisDescriptor, TTurretUnitDescriptor, TTurretInfanterieDescriptor, or TTurretBombardierDescriptor modules.
+
+These names pretty descriptively describe which particular module type corresponds with which weapon domain, and each one describes the weaponry and behavior of a turret of some kind on the unit. Each individual weapon, the things you actually see on the unit card, is in turn one of the TMountedWeaponDescriptor modules in the list of them stored in the MountedWeaponDescriptorList attribute of TTurret\textless *\textgreater Descriptor.
+
+Each of these in turn contains a reference to a single TAmmunition object, which describes everything about the damage output of the weapon itself, as opposed to the way it's mounted.
+
+And TAmmunition can itself contain references to another object! That object will be a TUniteDescriptor instance describing what the missile or round looks like and acts like while it's in flight.
+
+This a very dense structure, and it takes some play and mucking about to make sense of it at all.
+
+\subsection{ControllerName}
+
+Not interesting.
+
+\subsection{\_ShortDatabaseName}
+
+Will be "WeaponDescriptor\_" followed by the unit's debug name. Not very interesting.
+
+\subsection{HasMainSalvo}
+
+You may notice that almost all air unit will automatically "Evac Winchester" when a certain condition or set of condition is met. For air-to-ground units, this will occur whenever the unit has dropped its payload; for air-to-air units, it will occur when it has run out of missiles. There are a few corner cases, like the A-10 Thunderbolt, whose cannon is considered an important enough arnament that it doesn't just evac when it runs out of Mavericks; but it will if it runs out of both missiles and gun rounds (somehow).
+
+This flag indicates whether or not the unit has such a salvo. It is set to true if it does, and set to null if it doesn't. All non-plane units have this set to null.
+
+\subsection{SalvoIsMainSalvo}
+
+This is always a collection of four booleans. Note that it does nothing if HasMainSalvo is null, but is not itself null in that case. We therefore restrict our attention to the case of planes.
+
+The first element controls whether or not the weapon tagged to the first salvo index is considered the main weapon. For planes, the first salvo index will always be the gun, so the boolean in this index will control whether or not the plane's gun is considered primary.
+
+Again in the case of planes, the second element is never tagged to anything, so this is always False.
+
+The third element is whatever is tagged to the second salvo index, and the fourth element is whatever is tagged to the third salvo index.
+
+What do I mean by "tagged to the nth salvo index"? That's convered by the next variable.
+
+\subsection{Salves}
+
+Salves is a variable containing the number of salvos of a weapon available to a unit.
+
+For example, if a unit has a salvo size (set by NbTirParSalve three levels of heirarchy below, in TAmmunition) of 24 shots per salvo, and the corresponding entry in Salves gives is a value of 2, then the unit will have two salvos of 24 shots each. For an explanation of what a salvo is, refer to the TAmmunition documentation.
+
+Weapons are not listed in Salves in the order that they appear on the unit card. The order that they do appear in somewhat defines explanation. Salves always has 29 values in it, corresponding with a theoretical 29 weapons; in cases in which there is no weapon corresponding with that slot, the value is filled in as a -1.
+
+Which weapon corresponds to which index in this list is controlled by SalvoStockIndex, two levels of heirarchy down in TMountedWeaponDescriptor.
+
+\subsection{TurretDescriptorList}
+
+This is the next level of heirarchy down. Keep reading the section immediately below to study what's found here.
+
+\section{TurretDescriptorList : TTurret\textless *\textgreater Descriptor}
+
+As previously described, each TWeaponManagerModuleDescriptor contains a Collection known as a TurretDescriptorList whose items are individual TTurretTwoAxisDescriptor, TTurretUnitDescriptor, TTurretInfanterieDescriptor, or TTurretBombardierDescriptor modules. In this section we will describe the components of these modules.
+
+\subsection{NbFx}
+
+Something related to the physics engine.
+
+\subsection{Tag}
+
+The tag will a string of the form "tourelle1", "tourelle2", etcetera. This explicitly states the position of the turret in question in the list of turrets. Turrets are always tagged in the same order that they appear in thee TurretDescriptorList. This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{TagIndex}
+
+An even more literal intepretation of the above: will be one of 1, 2, 3, and so on. This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{VitesseRotation}
+
+Traverse speed of the turret, presumably in radians per second. This only appears if the turret in question is capable of traversal, so it is limited to TTurretTwoAxisDescriptor instances.
+
+\subsection{AngleRotationBase}
+
+The angle that the turret has with the hull when idle, in radians. This property is unique to TTurretTwoAxisDescriptor instances.
+
+\subsection{AngleRotationMax}
+
+Is the maximum angle that the turret can traverse. If you were to set this value to ~6.28, approximately 360 degrees, the turret traversal is 360 all around. This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{AngleRotationMaxPitch}
+
+Maximum turret elevation. This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{AngleRotationMinPitch}
+
+Minimum turret depression. This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{AngleRotationBasePitch}
+
+Resting turret depression. This property is unique to TTurretTwoAxisDescriptor instances.
+
+\subsection{UnitIdleManagerDescriptor}
+
+If this turret does something when the unit is idle (tank cannons for example will return their resting position), then this action is controlled by a module reference in this field. We will omit exploring that in detail. Only TTurretTwoAxisDescriptor instances have this attribute. This property is unique to TTurretTwoAxisDescriptor instances.
+
+\subsection{TargetPositionPhysicalPropertyName}
+
+Unknown.
+
+\subsection{FlyingTimeAndHitPhysicalPropertyName}
+
+Unknown.
+
+\subsection{OwnerTurnHisChassisVerticallyToAttack}
+
+This variable controls whether or not the unit automatically turns towards its target vertically. Whether or not the unit turns its chassis horizontally is controlled elsewhere, by the AutoRotation parameter in the UnitMouvement module field. This field is null for all land units, which obviously can't turn vertically. It is set to true for fixed-axis weapons, like helicopter or plane unguided rocket pods for example.
+
+This property will not appear for TTurretIfanterieDescriptor modules.
+
+\subsection{MountedWeaponDescriptorList}
+
+This property contains a list of references to the TMountedWeaponDescriptor elements mounted on this turret. This is the next level of heirarchy down, and is considered in the next section.
+
+\section{TTurret\textless *\textgreater Descriptor : TMountedWeaponDescriptor}
+
+Each individual weapon, the things you actually see on the unit card, is one of the TMountedWeaponDescriptor modules in the list of them stored in the MountedWeaponDescriptorList attribute of TTurret\textless *\textgreater Descriptor.
+
+\subsection{SalvoStockIndex}
+
+Which position in the Salves list two levels of heirarchy up, in the base TWeaponManagerModuleDescriptor, the current weapon takes it salvo count from. A small but important technical rub: if this value is set to null, then it is equivalent to the first value in the Salve list (the zeroth index).
+
+\subsection{SalvoStock\_ForInterface}
+
+This variable controls which position, amongst the weapons displayed on the unit card, the weapon in question occupies. Some weapons are defined twice, once for HE and once for AP, and they may have the same SalvoStock\_ForInterface value, in which case the two weapons will "stack" in the card display (resulting in a weapon with both HE and AP power, as with all tank cannons for example).
+
+\subsection{EffectTag}
+
+Unknown.
+
+\subsection{TirContinu}
+
+Unknown.
+
+\subsection{TirEnMouvement}
+
+Whether or not this weapon can be fired on the move. Null if no (grants the [STAT] tag), True is yes (in which case if additionally MissileDescriptor is populated and IsFireAndForget is set to True, then this weapon is [F\&F]; otherwise if MissileDescriptor is populated and IsFireAndForget is False, this weapon is [SA]; if MissileDescriptor is null this weapon recieves no additional tag). Note that the actual moving accuracy is set within the HitRollRule inside of TAmmunition, two levels of heirarchy deeper.
+
+\subsection{AnimateOnlyOneSoldier}
+
+This variable is set to null if the unit in question is not an infantry unit. If it is, and the weapon in question is a squad weapon limited only to the first man in the squad, then this value is set to True.
+
+\subsection{Ammunition}
+
+The next level of heirarchy. Keep reading...
+
+\section{Ammunition : TAmmunition}
+
+Describes everything about the damage output of the weapon itself, as opposed to the way it's mounted.
+
+\subsection{DescriptorId}
+
+An internal database hash. Don't touch this.
+
+\subsection{Name}
+
+An LocalizationHash which points at a ZZ\_Win.dat file (whicn one?)  to find a name for the cannon as displayed on the unit card. For example, the main cannon of an M1A1 is named M256.
+
+\subsection{TypeName}
+
+Unknown.
+
+\subsection{TypeArme}
+
+This LocalizationHash points at a ZZ\_Win.dat file (whicn one?) to find the weapon type. Here are the known hash values:
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Kind & Hash\\ \hline
+	MBT Main Cannon & B31E95B36B5E0000\\
+	Anti-Ship Missile & 57D7010000000000\\
+	CQC LMG & E1D2010000000000\\
+	More... & Add...\\
+    \hline
+    \end{tabular}
+\end{center}
+
+IF, and ONLY IF, TypeArme is set to the Anti-Ship Missile hash, then the AP damage set in Arme, the variable directly below, is multiplied by PhysicalDamages to give the unit its true AP damage value. Why? If you pay attention to ATGMs in this game you'll notice that they top out at a universial 30 AP. This is actually an engine limitation, and even getting the limit that high requires a certain trick that will be described later. But all AShMs do way more than 30 damage in-game (they start at 40). Eugen basically had to hack this in using this clever LocalizationHash abuse.
+
+If this value is set to the hash above, for a close-in LMG, then the weapon will be given the [CQC] tag.
+
+\subsection{Arme}
+
+This variable sets the unit's AP damage value.
+
+If Arme is between 5 and 34 inclusive, the AP damage dealt will be that value less 5, and the weapon will be a kinetic cannon (it will be given the [KE] tag).
+
+If Arme is between 35 and 64 inclusive, the AP damage dealt will be that value minus 34, and the weapon will be a high-energy anti-tank weapon (it will be given the [HEAT] tag).
+
+If Arme is 3, the weapon is given the [AOE] tag and will have an AP of 0 (it will be an HE-only weapon).
+
+\subsection{RadiusSplashPhysicalDamages}
+
+This variable controls the area of effect of HE splash damage. It also automatically scales the on-screen impact explosion to match.
+
+\subsection{PhysicalDamages}
+
+A float controlling the amount of HE damage this unit in the case of a direct hit.
+
+\subsection{ProjectileType}
+
+Unknown.
+
+\subsection{Puissance}
+
+The direct translation is "noise". This variable is a stealth-negating multiplier that controls how much easier this unit is to spot when it fires this weapon. Values here range from 1 for silenced weapons to the upper two digits.
+
+\subsection{TempsEntreDeuxTirs}
+
+Literal translation is "time between two shots". Each weapon firing in the game is organized in terms of "salvos"; salvo sizes range from 1 for tank cannons to lots and lots for good anti-air pea shooters.
+
+The best way to think of this variable is as the "time between two bursts". If you weapon has a salvo size of 24 bursts, the time between each of those shots in the salvo will be controlled here. But if your weapon has a magazine size of 1 bursts, then TempsEntreDeuxTirs will never kick in, because the magazine is always either full or empty.
+
+For example, take the main weapon of a Biryuska anti-air unit. This weapon fires a hail of bullets in bursts. The time between each bullet in the burst is controlled by TempsEntreDeuxTirs, whilst the time between each burst itself is controlled by TempsEntireDuexFx.
+
+The critical so-what here is that TempsEntreDeuxTirs is not affected by morale. Once a weapon starts burst-firing, it will continue to burst-fire at its usual rate. It's only the reload time between bursts which is affected by morale fatigue.
+
+Suppose that w have a tank with an autoloader (a T-80U for example). It will have a Salves value (set three levels of hierarchy above, in the WeaponManager) of, say, 24 shots. That means that, technically speaking, a T-80U fires its weapon in a 24-shot burst! It is only in the gap between the 24th and 25th shot that the variable controlling inter-burst time, TempsEntreDuexFx, kicks in, and so only that shot will be slowed down by morale damage.
+
+An M1A2 without an autoloader, by contrast, will have a Salves value of 1. Each shot is its own burst, so TempsEntireDeuxTirs will never kick in, and the weapon's reload speed will be totally controlled by TempsEntreDuexFx, the next variable in this list, which is impacted by morale.
+
+The unit here is seconds.
+
+\subsection{TempsEntreDuexSalves}
+
+This variable controls time between two salvos, bursts, magazines, whateveryouhaveit. Per the terms described in the variable above, it is the only reload time controller for slow-firing weapons without autocannons. For weapons which fire in short bursts, like anti-air guns or machine-guns, this variable controls the size of the gap in between firings.
+
+This variable is impacted by morale.
+
+\subsection{TempsEntreDuexFx}
+
+This is a visual variable which controls the time in between animations for weapon firings kicking off.
+
+\subsection{NbrProjectilesSimultanes}
+
+The number of projectiles fired simultaneously. For tank cannons for example this is set to 1, as you only get to fire one shot at a time.
+
+\subsection{NbTirParSalves}
+
+The number of shots per salvo.
+
+\subsection{AffichageMunitionParSalve}
+
+The number of displayed ammunition that is depleted after a full salvo is fired.
+
+\subsection{PorteeMaximale}
+
+Maximal range against ground units.
+
+\subsection{PorteeeMinimale}
+
+Minimum range against ground units. Set to null if the unit has no minimal range.
+
+\subsection{PorteeMinimaleBateaux}
+
+Maximal range against ships.
+
+\subsection{PorteeMaximaleBateaux}
+
+Minimum range against ships.
+
+\subsection{PorteeMaximaleTBA}
+
+Maximum range against helicopters.
+
+\subsection{PorteeMinimaleTBA}
+
+Minimum range against helicopters.
+
+\subsection{PorteeMaximaleHA}
+
+Maximum range against planes.
+
+\subsection{PorteeMinimaleHA}
+
+Minimum range against planes.
+
+\subsection{PorteeMaximaleProjectile}
+
+Grants the ability to fire at incoming anti-ship missiles, and sets the maximum range thereof. Grants the [DEF] tag.
+
+\subsection{PorteeMinimaleProjectile}
+
+Sets the minimum range for firing at incoming anti-ship missiles.
+
+\subsection{AngleDispersion}
+
+This value controls how much spread a unit has in either of two cases: either when it fails to hit the unit in question directly (a near miss still does HE damage), and how wide the circle is when the unit fires on position.
+
+\subsection{SuppressDamages}
+
+How much suppression damage this unit does on a direct hit.
+
+\subsection{RadiusSplashSuppressDamages}
+
+The radius of the circle in which the weapon will do suppression damage.
+
+\subsection{RayonPinned}
+
+The direct translation is "pinned radius". What this variable does is unknown.
+
+\subsection{TirIndirect}
+
+Null if this weapon is direct-fire, True otherwise.
+
+
+\subsection{FX\_tir\_sans\_physic}
+
+A physics variable.
+
+\subsection{FX\_vitesse\_de\_depart}
+
+A physics variable.
+
+\subsection{FX\_frottement}
+
+A physics variable.
+
+\subsection{FX\_tir\_trendu}
+
+A physics variable.
+
+\subsection{Level}
+
+Unknown.
+
+\subsection{FireDescriptor}
+
+Unknown.
+
+\subsection{FireTriggeringProbability}
+
+Unknown.
+
+\subsection{Caliber}
+
+A hash for the caliber of the weapon, as displayed in the armory screen.
+
+\subsection{WeaponCursorType}
+
+The type of cursor you get when you hover over a targetable enemy unit. There are three kinds in the game, one for cannons, one for missiles, and one for anti-air. In order these are 1, 2, and 3.
+
+\subsection{NoiseDissumlationMalus}
+\subsection{TempsDeVisee}
+
+This controls a unit's aim time. Aim time, which is affected by morale, is the amount of time it takes for a unit to go from seeing an enemy to being ready to shoot it.
+
+Note that if the unit is still reloading, or the weapon is on a turret and the other unit is outside of the cone of fire (for example, if you are passing by a helicopter with an airplane, or your tank turret hasn't finished turning around yet), then your unit can finish aiming before it is actually ready to fire.
+
+\subsection{InterfaceWeaponTexture}
+
+Unknown.
+
+\subsection{AffichageMenu}
+
+Unknown.
+
+\subsection{SupplyCost}
+
+The cost, in units of supply (liters), to reload one ammunition instance for this weapon.
+
+\subsection{SmokeDescriptor}
+
+If this is populated, the unit is granted a [SMK] tag.
+
+\subsection{MissileTimeBetweenCorrections}
+
+The number of seconds between a missile exiting the tube and the missile recieving a "reroll". When a reroll occurs, a missile that's still in transit has to pass another check to see if it will hit the target or not. For this reason slow long-range missiles are less accurate than they appear to be in the stats alone, because they have to reroll two, possible three times! That has a huge negative effect on actual hit chance, and the result is especially pronounced in the case of infantry ATGMs.
+
+\subsection{Guidance}
+
+If this value is set to null or 0, this weapon has no guidance. If this is set to 1, this weapon is radar-guided, recieving the [RAD] tag (and the corresponding ability to get its unit killed by SEAD). If this is set to 2, this weapon is anti-radar, recieving the [SEAD] tag.
+
+\subsection{EfficaciteSelonPortee}
+
+If this is set to True, the weapon's AP scales with distance to its target, as would be expected of a kinetic energy ([KE] tagged) weapon. Null otherwise. Note however that the [KE] tag alone doesn't guarantee this property, or vice versa; properly formatted units must have both set.
+
+\subsection{AffecteParNombre}
+
+Unknown.
+
+\subsection{NeedModelChange}
+
+Unknown.
+
+\subsection{IsFireAndForget}
+
+Rather obviously makes the weapon fire and forget (grants a [F\&F] tag).
+
+\subsection{IgnoreInflammabilityConditions}
+
+Gives this weapon the [NAPALM] tag.
+
+\subsection{InterdireTirReflexe}
+
+Unknown, but related to the below somehow.
+
+\subsection{TirReflexe}
+
+Seems to allow CIWS weapons (ones which have PorteeMaximaleProjectile) to target all incoming missiles, including non anti-ship ones.
+
+\subsection{DispersionAtMaxRange}
+
+Artillery unit radial accuracy at its maximum range.
+
+\subsection{DispersionAtMinRange}
+
+Artillery unit radial accuracy at its minimum range.
+
+\subsection{CorrectedShotDispersionMultiplier}
+
+How much better an artillery shot will be if the shot is on a vision-spotted target.
+
+\subsection{IsSubAmmunition}
+
+Will give the unit a cluster damage ([CLUS]) tag.
+
+\subsection{RandomDispersion}
+
+Unknown.
+
+\subsection{TempsAnimation}
+
+Unknown.
+
+\subsection{HitRollRule}
+
+Contains a reference to a TModernWarfareHitRollRule, which contains four variables: MinimalHitProbability, which sets a floor on how low a shot's accuracy can go (0.05 is usual); minimal crit probability, which sets a floor on how low crit chance can go (0.01 is usual); hit probability, which controls the base change to hit of the weapon in question; and hit probability while moving, which controls the weapon's chance to hit while the unit is on the move (but only if the weapon is not stationary, which is set elsewhere!).
+
+\subsection{MissileDescriptor}
+
+This variable contains a reference to a TUniteDescriptor object that describes some kind of missile. Since a missile isn't meant to appear as its own unit, all of the interesting variables thereof are set to null; indeed, this reference only serves to link the art assets of the missile to those of the weapon firing it, as all variables like accuracy and salvo size are set within TAmmunition itself.
 
 \section{TModernWarfareDamageModuleDescriptor}
 
-WRITE THIS UP.
+This module is the second and less complex of the two modules controlling the most interesting aspect of the game, its combat. This module controls armor and defensive values. Its top-level TModernWarfareDamageModuleDescriptor object references a TModernWarfareCommonDamageDescriptor, which in turn references a TBlindageProperties.
+
+\subsection{ControllerName}
+
+Not interesting.
+
+\subsection{CommonDamageDescriptor}
+
+
+\subsection{MaxDamages}
+
+The unit's HP.
+
+\subsection{MaxHPForHUD}
+
+The number of bars of HP to display in-game; this only differs from MaxDamages for ships.
+
+\subsection{Experience}
+
+Always set to "Experience".
+
+\subsection{AutoOrientation}
+
+Whether or not the unit automatically rotates itself to face forward against any units that it is targeting. For ground units the unit's best armor is in front, so AutoOrientation is a defensive trait thereof.
+
+\subsection{Transporter}
+
+Whether or not this unit is a transporter unit. Set to null if it is not, and "Transporter" if it is.
+
+\subsection{IsTargetableAsBoat}
+
+Whether or not the unit is targetable as a ship (e.g. by AShMs). Set to null if not and True if so.
 
 \section{TAppearanceModelDescriptor}
 
 Controller for things related to the unit's appearance.
+
+\section{CommonDamageDescriptor : TModernWarfareCommonDamageDescriptor}
+
+This module is referenced from TModernWarfareDamageModuleDescriptor, and contains further settings related to damage reception.
+
+\subsection{PaliersSuppressDamages}
+
+Always the list [0, 0.25, 0.5, 0.75]. Controls the percentage of the suppression damage cealing at which the various morale damage levels kick in.
+
+\subsection{PaliersPhysicalDamages}
+
+Always the list [0, 0.5, 0.75]. Controls the percentage of the physical health total at which physical damage effects kick in.
+
+\subsection{SuppressDamagesRegenRatio}
+
+Always a list of float pairs that looks like [1:0.2, 10:0.5, 30:1, 40:2, 50:3]. Controls the multiplier for suppression damage regeneration? But the values don't look quite right...
+
+\subsection{SuppressDamagesRegenRatioOutOfRange}
+
+How quickly the unit recovers from suppression when not actively receiving suppression damage. Always 20, except in the case of some combination of ships and supply vehicles.
+
+\subsection{StunDamagesRegen}
+
+Unknown; perhaps this is how much suppression damage the unit recovers while it is stunned? Always 5, except in the case of some combination of ships and supply vehicles.
+
+\subsection{StunDamagesToGetStunned}
+
+The amount of stun damage the unit has to receive in order to be stunned in the first place. Always 300, except in the case of some combination of ships and supply vehicles; this suppression amount has to be generated within a certain amount of time.
+
+\subsection{SuppressDamagesEffects}
+
+Contains a table of references to TSuppressDamagesEffects which describe the (global, basically) effects of a unit receiving suppression damage. The values at which these levels kick in are set by PaliersSuppressDamages, described above.
+
+\subsection{PhysicalDamagesEffects}
+
+Contains a table of references to TPhysicalDamagesEffects which describe the (global, basically) effects of a unit receiving physical damage. The values at which these levels kick in are set by PaliersPhysicalDamages, described above. The effects here are not as extreme as the ones for suppression damage, but still quite noticeable.
+
+\subsection{MaxSuppressionDamages}
+
+The maximum amount of suppression damage a unit can recieve. Always 800, except in the case of some combination of ships and supply vehicles.
+
+\subsection{PhysicalDamagesEffects}
+
+Contains a table of references to TPhysicalDamagesEffects which describe the (global, basically) effects of a unit receiving physical damage. The values at which these levels kick in are set by PaliersPhysicalDamages, described above. The effects here are not as extreme as the ones for suppression damage, but still quite noticeable.
+
+\subsection{TestMoralRollRule}
+
+Contains a reference to TModernWarfareTestMoralRollRule. Purpose needs further investigating...
+
+\subsection{TBlindageProperties}
+
+Contains four armor values, one for each side of the unit: front, sides, rear, top, in that order. Each in turn links to a TArmorDescriptor module with a BaseBlindage integer value. As with weapon damage, BaseBlindage is not a direct translation to armor value, but rather a map. A BaseBlindage of 0 or null means no armor whatsoever. A BaseBlindage of 1 through 4 means an AV of 0 through 3 alongside what has been tested to be a measure of splash damage resistance. A BaseBlindage of 5 through 34, finally, is AV plus 4 (so for example a BaseBlindage of 21 refers to 17 AV).
 
 \section{TVisibilityModuleDescriptor}
 
