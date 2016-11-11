@@ -1199,16 +1199,50 @@ Unknown.
 
 \subsection{TypeArme}
 
-This LocalizationHash points at a ZZ\_Win.dat file (whicn one?) to find the weapon type. Here are the known hash values:
+This LocalizationHash points at a ZZ\_Win.dat file to find the weapon type. Here are the known hash values:
 
 \begin{center}
-    \begin{tabular}{ | l | l |}
+    \begin{tabular}{ | l | l | l |}
     \hline
-	Kind & Hash\\ \hline
-	MBT Main Cannon & B31E95B36B5E0000\\
-	Anti-Ship Missile & 57D7010000000000\\
-	CQC LMG & E1D2010000000000\\
-	More... & Add...\\
+	Hash & Kind & Count\\ \hline
+	B31E95B36B5E0000 & Main Gun & 639\\
+	D175010000000000 & MMG & 569\\
+	F46CA274AE2F0000 & Autocannon & 436\\
+	5C99C7BA89E30B00 & Assault Rifle & 342\\
+	57E42D0000000000 & ATGM & 272\\
+	D7B2000000000000 & Air-to-Air Missile & 187\\
+	E162010000000000 & Light Anti-Tank Weapon & 185\\
+	6ABCBA1C00000000 & Battle Rifle & 160\\
+	D7D2010000000000 & SAM & 149\\
+	B7FAE72E4F4B0000 & Howitzer & 130\\
+	E1D2010000000000 & CQC LMG & 97\\
+	295D975EC5010000 & Rocket Pods & 97\\
+	D1D5010000000000 & SMG & 84\\
+	B799DFF405000000 & Mortar & 74\\
+	D125010000000000 & HMG & 72\\
+	D165010000000000 & LMG & 66\\
+	74AE2FE5ECF21E00 & Twin Autocannon & 65\\
+	57D7010000000000 & AShM & 61\\
+	ECECC6B919010000 & Gatling Gun & 56\\
+	5C19BB34AA720000 & Recoilless Rifle & 49\\
+	A74C330000000000 & HE Bomb & 37\\
+	74AE2FE56E620000 & Naval Autocannon & 37\\
+	E8AC9B56C95D0000 & MLRS & 34\\
+	57B4000000000000 & AGM & 30\\
+	5639AB7704000000 & Grenade Launcher & 24\\
+	B31E95BB89010000 & Naval Gun & 22\\
+	5D38350000000000 & CIWS & 22\\
+	AA6CC61000000000 & Flamethrower & 21\\
+	A74C337ADC000000 & AT Cluster Bomb & 20\\
+	A74C33B589010000 & Napalm Bomb & 19\\
+	DC02000000000000 & Anti-Radar Missile & 17\\
+	D7D295BB89010000 & Naval SAM & 16\\
+	B75ABB7307000000 & Sniper Rifle & 12\\
+	74AE2F656AEA1B00 & Quad Autocannon & 8\\	
+	2D3AEBA655720000 & Rocket Launcher (Incendiary) & 7\\
+	32E3EA116E5A0000 & Laser-Guided HE Bomb & 6\\
+	D7D245DE02000000 & Dual-Purpose Missile & 4\\
+	A74C33B9CA010000 & Retarded HE Bomb & 2\\
     \hline
     \end{tabular}
 \end{center}
@@ -1216,6 +1250,8 @@ This LocalizationHash points at a ZZ\_Win.dat file (whicn one?) to find the weap
 IF, and ONLY IF, TypeArme is set to the Anti-Ship Missile hash, then the AP damage set in Arme, the variable directly below, is multiplied by PhysicalDamages to give the unit its true AP damage value. Why? If you pay attention to ATGMs in this game you'll notice that they top out at a universial 30 AP. This is actually an engine limitation, and even getting the limit that high requires a certain trick that will be described later. But all AShMs do way more than 30 damage in-game (they start at 40). Eugen basically had to hack this in using this clever LocalizationHash abuse.
 
 If this value is set to the hash above, for a close-in LMG, then the weapon will be given the [CQC] tag.
+
+Additionally, the hash 	6A6ACEEA1D010000 maps to a test value.
 
 \subsection{Arme}
 
@@ -1243,7 +1279,7 @@ A float controlling the amount of HE damage this unit in the case of a direct hi
 
 \subsection{ProjectileType}
 
-Unknown.
+Set to 5 for missiles, 1 for indirect-fire weapons, and 4 for certain dedicated bombers. Usually left null.
 
 \subsection{Puissance}
 
@@ -1370,7 +1406,7 @@ A physics variable.
 
 \subsection{Level}
 
-Unknown.
+If this weapon appears on the unit card, this variable (set to one of 1, 2, or 3) controls which card slot it appears in. If this weapon does not appear on the unit card, this variable is set to null.
 
 \subsection{FireDescriptor}
 
@@ -1378,7 +1414,23 @@ Unknown.
 
 \subsection{FireTriggeringProbability}
 
-Unknown.
+This variable controls the probability that this weapon will start a fire when it impacts. Though the NAPALM tag is attached elsewhere, this variable is essentially what controls napalm behavior!
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Example & Count\\
+    \hline
+	1 & TOS Buratino & 14\\
+	0.3 & DANA & 93\\
+	0.25 & BM-27 URAGAN & 15\\
+	0.2 & B-5 & 5\\
+	0.1 & BTR-T (GL) & 39\\
+	0.05 & Mi-8T (Rocket Pods) & 18\\
+	null & Everything else & 1477\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{Caliber}
 
@@ -1389,6 +1441,9 @@ A hash for the caliber of the weapon, as displayed in the armory screen.
 The type of cursor you get when you hover over a targetable enemy unit. There are three kinds in the game, one for cannons, one for missiles, and one for anti-air. In order these are 1, 2, and 3.
 
 \subsection{NoiseDissumlationMalus}
+
+Unknown.
+
 \subsection{TempsDeVisee}
 
 This controls a unit's aim time. Aim time, which is affected by morale, is the amount of time it takes for a unit to go from seeing an enemy to being ready to shoot it.
