@@ -128,15 +128,45 @@ It needs to be noted that this piece of text corresponds to the name in the armo
 
 \subsection{AliasName}
 
-A better-formed name for the unit. Does nothing in-game. Not editable. Some are null.
+A better-formed name for the unit that appears, in most cases, to be a copy of NameInMenuToken. This variable does nothing in-game, however, is not editable, and is often (in 485 cases, as of writing) simply "null".
 
 \subsection{Category}
 
-Unknown.
+Another categorization variable, filled in with a number between 1 and 6. What unit gets placed in what category does not appear to follow any logic, and this variable is safe to ignore.
 
-\subsection{AcknowUnitTpye}
+\subsection{AcknowUnitType}
 
-Unknown.
+This variable categories units by type. The scattershot nature of the categorizations seems to imply that at one point the categorizations were of units of specific types, but balancing patches which moved these units around categories seem not to have included updates to this variable, introducing inaccuracies.
+
+Given that fact, it is doubtful that this variable has effect on gameplay. See the "Factory" variable for a cleaner categorization variable.
+
+\begin{center}
+    \begin{tabular}{ | l | l |}
+    \hline
+	Value & Type\\ \hline
+	15 & Israeli and Dutch (Paid DLC) Air Superiority Fighters.\\
+	16 & Israeli and Dutch (Paid DLC) Multirole Planes.\\
+	17 & Israeli and Dutch (Paid DLC) Ground-Attack Planes.\\
+	18 & Israeli and Dutch (Paid DLC) SEAD Planes.\\
+	22 & Tanks, and a few vehicles.\\
+	23 & Missile platforms, mortars, most vehicles.\\
+	24 & Most recon units.\\
+	25 & Supply vehicles.\\
+	26 & Command units.\\
+	27 & Most planes and non-recon helicopters.\\
+	28 & Flamethrower sappery.\\
+	29 & Transport units, including commands based on them.\\
+	30 & Missile-based anti-air, including anti-air infantry.\\
+	31 & Gun-based anti-air.\\
+	32 & Heavy artillery.\\
+	33 & Most infantry.\\
+	34 & Certain special forces infantry.\\
+	35 & AsHMs, napalm launchers, and cluster artillery.\\
+	36 & ATGM-carrying infantry and, weirdly, Mistrals.\\
+	38 & Ships, including transport ships.\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{TypeForAcknow}
 
@@ -181,7 +211,13 @@ These are French acronyms, hence why URSS is "backwards".
 
 \subsection{ProductionYear}
 
-The year that the unit was produced. Note that this variable only controls the text; whether or not the unit is actually available in the unit-year categories for deck building (Cat A, Cat B, Cat C) is controlled elsewhere.
+The year that the unit was produced. Note that this variable only controls the text that displays on the unit card. Whether or not the unit is actually available in the unit-year categories for deck building (Cat A, Cat B, Cat C) is controlled by an element of the Filter field in the UnitType module.
+
+The record for the oldest unit in the game goes to M-24, a ten-point Norwegian tank that is nothing less and nothing more than the same mainstay tank of World War II provenance. It has a build date of 1943.
+
+Other ancient units are the Czech OT-810 halftrack (1945), Danish M6 Mosegris truck (1947), North Korean Su-76M tank destroyer (1948), and Soviet BTR-152E ZPTU-2 machine-gun truck (1950).
+
+The newest units date to 1996, and include the K9 Thunder, AH-64 Escort, JAS-39 Gripen, AMOS, and Su-27PU.
 
 \subsection{MaxPacks}
 
@@ -300,7 +336,7 @@ Five is the maximum value, as no more are allowed to stack in the armory; any nu
 
 \subsection{IsPrototype}
 
-Whether or not the unit is a prototypal unit. Null if it isn't, True if it is. Affects deck-building, as prototypal units can't be used in global decks.
+Whether or not the unit is a prototypal unit. Null if it isn't, True if it is. Affects deck-building, as prototypal units can't be used in global decks. 248 units in the game are considered prototypes, as of-writing, out of 1818 total, a little less than 14 percent of the total.
 
 \subsection{Key}
 
@@ -390,22 +426,34 @@ Unknown.
 
 \subsection{Training}
 
-Unknown. Usually, maybe always null.
+If this unit is an infantry unit, this is set to a hash pointing to its training level (otherwise null):
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Kind & Hash & Count\\ \hline
+	Elite & 8F37594F19619C07 & 45\\
+	Shock & 5593495D19619C07 & 66\\
+	Regular & D6173D5C19619C07 & 164\\
+	Militia & DE644D5719619C07 & 15\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{CIWS}
 
 The CIWS statistic, as displayed in the armory, carried by a naval unit. Set to null for non-naval units and for naval units without CIWS. This is a localization hash; to set it to a particular value, use one of the following:
 
 \begin{center}
-    \begin{tabular}{ | l | l |}
+    \begin{tabular}{ | l | l | l |}
     \hline
-	Kind & Hash\\ \hline
-	Exceptional & 4F233E0000000000\\
-	Very Good & 4E96452000000000\\
-	Good & 4E96450000000000\\
-	Medium & D672711906000000\\
-	Bad & CEC2000000000000\\
-	None & null\\
+	Kind & Hash & Count\\ \hline
+	Exceptional & 4F233E0000000000 & 1\\
+	Very Good & 4E96452000000000 & 3\\
+	Good & 4E96450000000000 & 4\\
+	Medium & D672711906000000 & 6\\
+	Bad & CEC2000000000000 & 15\\
+	None & null & 1786\\
     \hline
     \end{tabular}
 \end{center}
@@ -632,11 +680,11 @@ Uninteresting.
 
 \subsection{FuelCapacity}
 
-The number of units of fuel that this unit can stockpile.
+The number of units of fuel that this unit carries. While actual autonomy is a function of FuelMoveDuration, this variable controls fuel efficiency with respect to that, and, therefore, how expensive it is to refuel this unit. This variable ranges between 45 (the L3304, a Sewidish recon jeep) and 6500 liters (Su-24, MiG-31, MiG-25, F-15, F-14, and F-111 series planes).
 
 \subsection{FuelMoveDuration}
 
-Autonomy in seconds. Appears to b the same as the T.O.T statistic displayed in the Armory.
+Autonomy in seconds. Appears to be the same as the T.O.T statistic displayed in the Armory. Ranges between 60 (MiG-17, F-5, and other cheap planes) and 2000 (CH-46 Phrog, CH-47 Chinook, and MH-53 Pave Low variants).
 
 \section{TMouvementHandlerLandVehicleDescriptor}
 
@@ -664,17 +712,49 @@ The amount of time, in seconds, it takes for a unit to make a half-turn (the tra
 
 Presumably this value also controls how long it takes to make turns that are less than 180 degrees, but still significant. The cutoff value at which a unit starts to make a reverse turn, instead of just turning in place, is unknown.
 
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Units & Count\\ \hline
+	0.1 & Infantry & 296\\
+	2.0 & Jeeps & 236\\
+	3.0 & Light vehicles & 404\\
+	4.0 & Trucks, heavy vehicles, light tanks & 167\\
+	5.0 & Most tanks & 366\\
+	6.0 & Artillery, MLRS, Challenger 1 series tanks & 60\\
+	7.0 & Some MLRS, some tanks (Centurions, Chieftains) & 44\\
+	10.0 & Light ships & 8\\
+	15.0 & Heavy ships & 5\\
+	20.0 & Fleet ships (Sovremenniy, Udaloy II, Kongo) & 3\\
+    \hline
+    \end{tabular}
+\end{center}
+
 \subsection{MaxAcceleration}
 
 The acceleration the unit applies when it is speeding up.
 
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Units & Count\\ \hline
+	4030 & Infantry & 296\\
+	2080 & Jeeps & 100\\
+	1950 & Light vehicles & 131\\
+	1560 & T-64BM, T-72S Series, T-72M2 Moderna & 7\\
+	1300 & Most tanks and vehicles & 443\\
+	1040 & Centurion series tanks, PTZ-59, ZTZ-59-II & 15\\
+    \hline
+    \end{tabular}
+\end{center}
+
 \subsection{MaxDeceleration}
 
-How hard to breaks hit. Tends to be twice MaxAcceleration for tracked and wheeled land units.
+How hard to breaks hit. Always 4030 for infantry and 2600 for everything else.
 
 \subsection{VehicleSubType}
 
-Unknown, often null.
+1 for lightly armored units, 2 for infantry, 3 for other lightly armored stuff, and 4 for boats. More often then not, however, this variable is set to null, and so may be safely ignored.
 
 \subsection{CriticalEffectModule}
 
@@ -702,9 +782,20 @@ The unit's max speed, in engine distance units (the meaning of which is covered 
 
 The acceleration the unit applies when it is speeding up.
 
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	2080 & AH-1 Cobra, Z-9, Gazelle & 93\\
+	1560 & AH-64, Tigre, Mi-28 & 17\\
+	1040 & Mi-8, UH-1H Huey, Mi-24, CH-47 Chinook & 109\\
+    \hline
+    \end{tabular}
+\end{center}
+
 \subsection{MaxDeceleration}
 
-How hard the breaks hit.
+How hard the breaks hit. The values are always the same as those above (e.g. helicopters always decelerate and accelerate at the same rate).
 
 \subsection{UnitMovingType}
 
@@ -712,35 +803,77 @@ The same as that set in TUnitMouvementDescriptor. Here this will always be 6, fo
 
 \subsection{CyclicManoeuvrability}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain. Higher is better.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	40 & CH-47C Chinook, Mi-6, Mi-26 & 22\\
+	60 & Mi-4, Mi-8, Mi-17 & 31\\
+	80 & Mi-24, Ka-29TB, UH-1H Huey & 46\\
+	90 & PUMA 330, Z-9 & 11\\
+	100 & Mi-2, AH-64, Ka-52 & 34\\
+	110 & Z-9, Lynx, Alouette & 22\\
+	130 & Gazelle, AH-1 Cobra, Bo-105 & 53\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{GFactorLimit}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	1.8 & CH-47C Chinook, Mi-6, Mi-26 & 53\\
+	2.2 & UH-1H Huey, Bell 412 & 25\\
+	2.5 & Mi-2, Mi-24, Lynx & 70\\
+	3.0 & AH-64, Ka-52, Tigre & 15\\
+	3.5 & Gazelle, AH-1 Cobra, Bo-105 & 56\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{LateralSpeed}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain. Is always set to 2600.
 
 \subsection{Mass}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain.
+
+Values used in-game are 50000.0, 22000.0, 12000.0, 11000.0, 10000.0, 8500.0, 8000.0, 7000.0, 5300.0, 4300.0, 4100.0, 3700.0, 3000.0, 2500.0, or 1800.0.
 
 \subsection{MaxInclination}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	89 & Mi-2, Mi-24, Lynx AH.7 & 154\\
+	80 & PUMA, Z-9 & 11\\
+	75 & PUMA 330B Command & 1\\
+	60 & Mi-8, CH-47 Chinook & 53\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{RotorArea}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain. Ranges between 80 and 800.
 
 \subsection{TorqueManoeuvrability}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain. Ranges between 30 and 120.
 
 \subsection{UpwardsSpeed}
 
-Controls movement.
+Controls movement in some way, though in what way is uncertain. Ranges between 1300 and 3900.
 
 \subsection{CriticalEffectsModule}
 
@@ -748,7 +881,7 @@ A module pointer whose contents is a TCriticalEffectModuleDescriptor describing 
 
 \subsection{TempsDemiTour}
 
-The amount of time, in seconds, it takes for a unit to make a half-turn (the translation is literal). For helicopters this requires a dive to the left. It's uncertain whether or not this variable is still used for anything.
+The amount of time, in seconds, it takes for a unit to make a half-turn (the translation is literal). For helicopters this requires a dive to the left. For helicopters this variable is always set to 2.
 
 \section{TMouvementHandlerAirplaneDescriptor}
 
@@ -760,15 +893,43 @@ Maximum speed this unit can go at. Since airplanes fly at a constant speed, this
 
 \subsection{UnitMovingType}
 
-Always 6, for air (other values are 4 for sea and 1 for land).
+Always 6, for air.
 
 \subsection{FlyingAltitude}
 
 The height the plane prefers to fly at. Notably, all planes spawn at the same height then ascend or descend to their prefered height.
 
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	78000 & F-117 Nighthawk, B-5, MiG-31M, F-14 Tomcat & 7\\
+	65000 & EF-111A Raven, Eurofighter Typhoon & 78\\
+	52000 & A-5, A-4K Kahu, CF-18 Hornet & 61\\
+	39000 & F-111C, A-6A Intruder, Alpha Jet A & 26\\
+	26000 & A-10 Thunderbolt II, F-111G. CF-104 & 51\\
+    \hline
+    \end{tabular}
+\end{center}
+
+
 \subsection{MinimalAltitude}
 
 Below which the plane will not dip. Will cause it to break off from certain attacks at certain heights.
+
+\begin{center}
+    \begin{tabular}{ | l | l | l |}
+    \hline
+	Value & Examples & Count\\ \hline
+	15600 &  F-117 Nighthawk, B-5, MiG-31M, F-14 Tomcat & 7\\
+	13000 & EF-111A Raven, Eurofighter Typhoon & 78\\
+	10400 & A-5, A-4K Kahu, CF-18 Hornet & 67\\
+	7800 & F-111C, A-6A Intruder, Alpha Jet A & 26\\
+	5200 & A-10 Thunderbolt II, F-111G. CF-104 & 49\\
+	2600 & J-35D Draken, J-35F Draken & 2\\
+    \hline
+    \end{tabular}
+\end{center}
 
 \subsection{PhysicsConfiguration}
 
@@ -844,7 +1005,7 @@ Uninteresting.
 
 \subsection{SupplyCapacity}
 
-Units of supply (liters) this unit carries.
+Units of supply (liters) this unit carries. Ranges between 15000 and 500.
 
 \subsection{DeploymentDuration}
 
@@ -857,6 +1018,8 @@ How long after a unit is ordered to start moving before it stops providing suppl
 \subsection{SupplyPriority}
 
 It is possible for supply units to supply other supply units; for example a common tactic is to shorten the supply chain trip length by buying a Mi-26, dropping it halfway between the FOB and the battlefield, and running ammo trucks between the helo and the front line. The lower this number the lower in this stack this unit is, and the greater the number of other supply units this supply unit could itself draw from. Generally 1-to-1 with total supply onboard: the bigger the capacity, the lower the SupplyPriority.
+
+Ranges between 10 and 34.
 
 \subsection{SupplyDescriptor}
 
@@ -940,7 +1103,7 @@ An even more literal intepretation of the above: will be one of 1, 2, 3, and so 
 
 \subsection{VitesseRotation}
 
-Traverse speed of the turret, presumably in radians per second. This only appears if the turret in question is capable of traversal, so it is limited to TTurretTwoAxisDescriptor instances.
+Traverse speed of the turret, presumably in radians per second. This only appears if the turret in question is capable of traversal, so it is limited to TTurretTwoAxisDescriptor instances. Ranges between 1300 (I-Hawk family) and 36400 (the Pegasus).
 
 \subsection{AngleRotationBase}
 
@@ -987,6 +1150,8 @@ This property contains a list of references to the TMountedWeaponDescriptor elem
 \section{TTurret\textless *\textgreater Descriptor : TMountedWeaponDescriptor}
 
 Each individual weapon, the things you actually see on the unit card, is one of the TMountedWeaponDescriptor modules in the list of them stored in the MountedWeaponDescriptorList attribute of TTurret\textless *\textgreater Descriptor.
+
+Note that within the game files a unit can have more weapons than appears on its cards. This is true in part because weapons which deal both AP and HE or which can fire smoke have seperate weapons for each of these "features", and in part because ships have far more weapons than is listed on their card. The recordholder in this regard is, suprisingly, the Najin, which packs 11 weapons onboard. Way more than the 3 you see on the card!
 
 \subsection{SalvoStockIndex}
 
@@ -1060,11 +1225,17 @@ If Arme is between 5 and 34 inclusive, the AP damage dealt will be that value le
 
 If Arme is between 35 and 64 inclusive, the AP damage dealt will be that value minus 34, and the weapon will be a high-energy anti-tank weapon (it will be given the [HEAT] tag).
 
+If Arme is 4, the weapon will do no physical damage (though it may still deal suppression damage).
+
 If Arme is 3, the weapon is given the [AOE] tag and will have an AP of 0 (it will be an HE-only weapon).
+
+The "DeathExplosionArme" top-level variable in TAuUniteSolDescriptor links to one of a few TAmmunition instances, all of which have an Arme value of 4 (for regular units, whose deaths cause suppression damage but not physical damage) or 3 (alongside a certain PhysicalDamages setting, for supply units whose explosions may damage nearby allies).
 
 \subsection{RadiusSplashPhysicalDamages}
 
 This variable controls the area of effect of HE splash damage. It also automatically scales the on-screen impact explosion to match.
+
+FYI, the highest variable value in the game, 33800, is possessed by the B-5.
 
 \subsection{PhysicalDamages}
 
@@ -1164,9 +1335,13 @@ This value controls how much spread a unit has in either of two cases: either wh
 
 How much suppression damage this unit does on a direct hit.
 
+Additionally, the "DeathExplosionArme" top-level variable in TAuUniteSolDescriptor links to one of a few TAmmunition instances, examining which shows that most vehicular units deal 180 suppression damage to nearby allies when destroyed.
+
 \subsection{RadiusSplashSuppressDamages}
 
 The radius of the circle in which the weapon will do suppression damage.
+
+FYI, the highest value in the game, 67600, is possessed by the B-5.
 
 \subsection{RayonPinned}
 
